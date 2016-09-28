@@ -64,22 +64,22 @@ if __name__ == '__main__':
     cards = decoder.to_cards(L)
     from hand import Hand
     hand = Hand(cards)
-    print "hand"
-    print hand
-    print
-    print "cards grouped by rank"
+    print("hand")
+    print(hand)
+    print()
+    print("cards grouped by rank")
     for rank, cards in hand.group_by_rank().items():
-        print rank, ":",
+        print(rank, ":",)
         for card in cards:
-            print card,
-        print
-    print
-    print "cards grouped by suit"
+            print(card,)
+        print()
+    print()
+    print("cards grouped by suit")
     for suit, cards in hand.group_by_suit().items():
-        print suit, ":",
+        print(suit, ":",)
         for card in cards:
-            print card,
-        print
+            print(card,)
+        print()
     hand.generate_pairs()
     hand.generate_kaidans()
     #print " ".join(str(card) for card in cards)

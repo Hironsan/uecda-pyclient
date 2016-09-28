@@ -40,10 +40,7 @@ class Hand(object):
                     kaidan.append(next_card)
                     if len(kaidan) >= 3:                           # 枚数が3枚以上だったら
                         kaidans_grouped_by_card_num[len(kaidan)].append(kaidan[:])
-        # for card_num, kaidans in kaidans_grouped_by_card_num.items():
-        #     print "card_num =", card_num
-        #     for cards in kaidans:
-        #         print " ".join(str(card) for card in cards)
+
         return kaidans_grouped_by_card_num
 
     def generate_pairs(self):
@@ -61,11 +58,7 @@ class Hand(object):
             for card_num in range(1, len(cards)+1):               # card_numはペアの枚数
                 for comb_cards in combinations(cards, card_num):  # card_num枚で組み合わせを生成
                     pairs_grouped_by_card_num[len(comb_cards)].append(comb_cards)
-        # print "cards_grouped_by_card_num"
-        # for card_num, comb_cards in pairs_grouped_by_card_num.items():
-        #     print "card_num =", card_num
-        #     for cards in comb_cards:
-        #         print " ".join(str(card) for card in cards)
+
         return pairs_grouped_by_card_num
 
     def group_by_rank(self):
@@ -77,6 +70,7 @@ class Hand(object):
             if card.is_joker():
                 continue
             cards_grouped_by_rank[card.rank].append(card)
+
         return cards_grouped_by_rank
 
     def group_by_suit(self):
@@ -88,4 +82,5 @@ class Hand(object):
             if card.is_joker():
                 continue
             cards_grouped_by_suit[card.suit].append(card)
+
         return cards_grouped_by_suit

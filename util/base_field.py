@@ -24,6 +24,6 @@ class BaseField(object):
         return self._is_kakumei ^ self._is_11back
 
     def print_state(self):
-        print "is_11back  =", self.is_11back
-        print "is_shibari =", self.is_shibari
-        print "is_kakumei =", self.is_kakumei
+        print("is_11back  = {}".format(self.is_11back)
+        print("is_shibari = {}".format(self.is_shibari)
+        print("is_kakumei = {}".format(self.is_kakumei)

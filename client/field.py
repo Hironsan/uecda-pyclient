@@ -22,14 +22,14 @@ class Field(object):
             self.players_seats[player_id] = seat_id
 
     def print_field_state(self):
-        print 'is_exchange      =', self.is_exchange
-        print 'exchange_num     =', self.exchange_num
-        print 'is_my_turn       =', self.is_my_turn
-        print 'current_player   =', self.current_player
-        print 'is_empty         =', self.is_empty
-        print 'is_11back        =', self.is_11back
-        print 'is_kakumei       =', self.is_kakumei
-        print 'is_shibari       =', self.is_shibari
-        print 'players_card_num =', self.players_card_num
-        print 'players_grade    =', self.players_grade
-        print 'players_seats    =', self.players_seats
+        print('is_exchange      = {}'.format(self.is_exchange))
+        print('exchange_num     = {}'.format(self.exchange_num))
+        print('is_my_turn       = {}'.format(self.is_my_turn))
+        print('current_player   = {}'.format(self.current_player))
+        print('is_empty         = {}'.format(self.is_empty))
+        print('is_11back        = {}'.format(self.is_11back))
+        print('is_kakumei       = {}'.format(self.is_kakumei))
+        print('is_shibari       = {}'.format(self.is_shibari))
+        print('players_card_num = {}'.format(self.players_card_num))
+        print('players_grade    = {}'.format(self.players_grade))
+        print('players_seats    = {}'.format(self.players_seats))

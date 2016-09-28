@@ -42,10 +42,10 @@ class BaseCardState(object):
         return len(set(card.rank for card in cards)) == 1
 
     def print_card_state(self):
-        print 'card_num      =', self.card_num
-        print 'is_joker_only =', self.is_joker_only
-        print 'is_kaidan     =', self.is_kaidan
-        print 'is_pair       =', self.is_pair
-        print 'max_card      =', self.max_rank
-        print 'min_card      =', self.min_rank
-        print 'suit          =', self.suit
+        print('card_num      = {}'.format(self.card_num)
+        print('is_joker_only = {}'.format(self.is_joker_only)
+        print('is_kaidan     = {}'.format(self.is_kaidan)
+        print('is_pair       = {}'.format(self.is_pair)
+        print('max_card      = {}'.format(self.max_rank)
+        print('min_card      = {}'.format(self.min_rank)
+        print('suit          = {}'.format(self.suit)

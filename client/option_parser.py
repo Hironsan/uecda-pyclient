@@ -7,7 +7,7 @@ class OptParser(object):
     コマンドライン引数の解析をするクラス
     """
     def __init__(self):
-        usage = u'%prog [Args] [Options]\nDetailed options -h or --help'  # コマンドエラー時に表示する文字列
+        usage = '%prog [Args] [Options]\nDetailed options -h or --help'  # コマンドエラー時に表示する文字列
         version = 0.1
         self.parser = OptionParser(usage=usage, version=version)
         self.add_option('-p', '--port', typ='int', dest='port', hlp='Set server port number')
@@ -22,10 +22,10 @@ class OptParser(object):
         """
         self.parser.add_option(
             opt1, opt2,       # オプション
-            action = action,  # 行う処理
-            type   = typ,     # 型指定
-            dest   = dest,    # 保存先変数名
-            help   = hlp      # --help時に表示する文
+            action=action,  # 行う処理
+            type=typ,       # 型指定
+            dest=dest,      # 保存先変数名
+            help=hlp        # --help時に表示する文
         )
 
     def set_default(self, port=42485, name='default', addr='127.0.0.1'):
@@ -33,9 +33,9 @@ class OptParser(object):
         各オプションのデフォルト値をセットする
         """
         self.parser.set_defaults(
-            port = port,
-            name = name,
-            addr = addr
+            port=port,
+            name=name,
+            addr=addr
         )
 
     def get_options(self):
