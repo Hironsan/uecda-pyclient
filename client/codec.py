@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from card import Card
+from .card import Card
 
 
 class Encoder(object):
