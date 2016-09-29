@@ -23,7 +23,6 @@ class Client(object):
         while True:
             table = self.conn.recv_table()                                # 手札を受け取る
             hand = Hand(Decoder().to_cards(table))
-            print(hand)
             field = Field(table)
             if field.is_exchange and field.exchange_num > 0:              # カード交換をする場合は
                 strategy = Strategy(hand, field, CardState([]))           # カード選択のための戦略クラスを生成する
@@ -37,25 +36,19 @@ class Client(object):
         while True:
             table = self.conn.recv_table()                    # 手札と場の状態を受け取る
             hand = Hand(Decoder().to_cards(table))
-            print("hand", hand)
             field = Field(table)
-            print("my_turn", field.is_my_turn)
             if field.is_my_turn:                              # 自分の番だったら
                 strategy = Strategy(hand, field, card_state)  # カード選択のための戦略クラスを生成する
                 cards = strategy.select_cards()               # カードを選択する
-                print(" ".join(str(card) for card in cards))
                 table = Encoder().to_table(cards)
                 self.conn.send_table(table)                   # 選択したカードを提出する
                 was_accepted = self.conn.recv_int()           # 受理されたかを受け取る
-                print("accept =", was_accepted)
 
             table = self.conn.recv_table()                    # 場のカードを受け取る
             field_cards = Hand(Decoder().to_cards(table))
-            print("field", " ".join(str(card) for card in field_cards))
             card_state = CardState(field_cards)               # 場のカード状態を決定する
 
             is_end = self.conn.recv_int()  # ゲームが終わったかを受け取る
-            print("end", is_end)
             if is_end == 1:                # 1ゲーム終了のとき
                 return                     # self.runに戻る
             elif is_end == 2:              # 全ゲーム終了のとき
