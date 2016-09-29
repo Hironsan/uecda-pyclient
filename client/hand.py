@@ -2,6 +2,8 @@
 from collections import defaultdict
 from itertools import combinations
 
+from .card import Card
+
 
 class Hand(object):
     """
@@ -84,3 +86,33 @@ class Hand(object):
             cards_grouped_by_suit[card.suit].append(card)
 
         return cards_grouped_by_suit
+
+    def encode(self, cards):
+        """
+        Cardオブジェクトのリストを2次元配列に変換する
+        @return:
+        """
+        table = [[0] * 15 for i in range(8)]
+        for card in cards:
+            if card.is_joker():
+                if len(cards) == 1:
+                    table[0][0] = 2
+                else:
+                    table[card.suit][card.rank] = 2
+            else:
+                table[card.suit][card.rank] = 1
+        return table
+
+    def decode(self, table):
+        """
+        2次元配列をCardオブジェクトのリストに変換する
+        @return:
+        """
+        cards = []
+        for suit, line in enumerate(table[:5]):
+            for rank, flag in enumerate(line):
+                if flag == 0:
+                    continue
+                cards.append(Card(rank, suit, flag))
+        cards.sort()
+        return cards
