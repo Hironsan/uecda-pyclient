@@ -55,6 +55,17 @@ class Client(object):
                 self.conn.close()          # 接続を閉じてから
                 sys.exit(0)                # プログラムを終了する
 
+    def run_(self):
+        end_flag = CONTINUE_GAME
+        while end_flag != GAME_OVER:
+            # Before a game
+            select_cards
+            while end_flag == CONTINUE_GAME:
+                # During a game
+                select_cards
+                update_field
+                update_end_flag
+
 if __name__ == '__main__':
     client = Client()
     client.run()
