@@ -56,15 +56,28 @@ class Client(object):
                 sys.exit(0)                # プログラムを終了する
 
     def run_(self):
-        end_flag = CONTINUE_GAME
-        while end_flag != GAME_OVER:
+        end_flag = Game.cont
+        while end_flag is not Game.over:
             # Before a game
             select_cards
-            while end_flag == CONTINUE_GAME:
+            while end_flag is Game.cont:
                 # During a game
                 select_cards
                 update_field
-                update_end_flag
+                end_flag = self.update_end_flag()
+
+    def update_end_flag(self):
+        end_flag = self.conn.recv_int()
+        return Game(end_flag)
+
+import enum
+
+
+class Game(enum.Enum):
+    cont = 0
+    comp = 1
+    over = 2
+
 
 if __name__ == '__main__':
     client = Client()
