@@ -21,7 +21,7 @@ class OptParser(object):
         オプションを追加する
         """
         self.parser.add_option(
-            opt1, opt2,       # オプション
+            opt1, opt2,     # オプション
             action=action,  # 行う処理
             type=typ,       # 型指定
             dest=dest,      # 保存先変数名
