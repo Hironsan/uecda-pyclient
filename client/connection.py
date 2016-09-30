@@ -17,7 +17,7 @@ class Connection(object):
         return self
 
     def __exit__(self, *exc):
-        self.close()
+        self.sock.close()
 
     def recv_int(self):
         unpacked_value = self._recv_msg(byte_length=4)
@@ -25,16 +25,12 @@ class Connection(object):
         integer = s.unpack(unpacked_value)
         return integer[0]
 
-    # この中で、配列を構築すべきではない。構築する部分は分離して配列をsend_tableに渡すべき
-    def send_name(self, name, protocol=20070):
-        table = [[0] * 15 for i in range(8)]
-        table[0][0] = protocol
-        for i, ch in enumerate(name):
-            table[1][i] = ord(ch)
-        self.send_table(table)
-
-    def close(self):
-        self.sock.close()
+    def recv_table(self):
+        unpacked_value = self._recv_msg(byte_length=480)
+        s = struct.Struct('!120I')
+        ls = s.unpack(unpacked_value)
+        table = [ls[15 * i: 15 * (i + 1)][:] for i in range(8)]  # 8x15のリストに変換
+        return table
 
     def _recv_msg(self, byte_length):
         unpacked_data = ''
@@ -45,18 +41,19 @@ class Connection(object):
             unpacked_data += chunk
         return unpacked_data
 
-    def recv_table(self):
-        unpacked_value = self._recv_msg(byte_length=480)
-        s = struct.Struct('!120I')
-        ls = s.unpack(unpacked_value)
-        table = [ls[15 * i: 15 * (i + 1)][:] for i in range(8)]  # 8x15のリストに変換
-        return table
-
-    def _send_msg(self, msg):
-        self.sock.sendall(msg)
+    # この中で、配列を構築すべきではない。構築する部分は分離して配列をsend_tableに渡すべき
+    def send_name(self, name, protocol=20070):
+        table = [[0] * 15 for i in range(8)]
+        table[0][0] = protocol
+        for i, ch in enumerate(name):
+            table[1][i] = ord(ch)
+        self.send_table(table)
 
     def send_table(self, table):
         ls = [item for inner in table for item in inner]  # 2次元リストを1次元に変換
         s = struct.Struct('!120I')
         packed_value = s.pack(*ls)
         self._send_msg(packed_value)
+
+    def _send_msg(self, msg):
+        self.sock.sendall(msg)

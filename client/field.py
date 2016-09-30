@@ -33,3 +33,18 @@ class Field(object):
         print('players_card_num = {}'.format(self.players_card_num))
         print('players_grade    = {}'.format(self.players_grade))
         print('players_seats    = {}'.format(self.players_seats))
+
+
+class Field_(object):
+
+    def __init__(self, table):
+        self.__table = table
+
+    def is_exchange(self):
+        return self.__table[5][0]
+
+    def exchange_num(self):
+        return self.__table[5][1]
+
+    def is_my_turn(self):
+        return self.__table[5][2]
