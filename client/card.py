@@ -1,108 +1,62 @@
 # -*- coding: utf-8 -*-
+import enum
 
 
 class Card(object):
-    """
-    1枚のカードを表す基底クラス
-    ランク3には数字の1, ランク4には2...ランク2には13と対応させている
-    """
-    def __init__(self, rank, suit, flag):
+
+    def __init__(self, rank, suit):
         self.rank = rank
         self.suit = suit
-        self._is_joker = True if flag == 2 else False
 
-    def __cmp__(self, other):
-        if self.is_joker() and other.is_joker():
-            return 0
-        if self.is_joker():
-            return 1
-        if other.is_joker():
-            return -1
+    def __lt__(self, other):
         if self.rank < other.rank:
-            return -1
-        elif self.rank == other.rank:
-            if self.suit < other.suit:
-                return -1
-            elif self.suit == other.suit:
-                return 0
-            else:
-                return 1
-        elif self.rank > other.rank:
-            return 1
+            return True
+        if self.rank == other.rank and self.suit < other.suit:
+            return True
+        if other.suit == Suit.J:
+            return True
+        return False
+
+    def __eq__(self, other):
+        return self.rank == other.rank and self.suit == other.suit
 
     def __str__(self):
-        suit_conv = {0: 's', 1: 'h', 2: 'd', 3: 'c'}
-        if self.is_joker():
-            return "JOKER"
-        if self.rank <= 11:  # キング以下
-            return "%s%d" % (suit_conv[self.suit], self.rank + 2)
-        if self.rank <= 13:  # 2以下
-            return "%s%d" % (suit_conv[self.suit], self.rank - 11)
-
-    def is_joker(self):
-        return self._is_joker
+        if self.suit is Suit.J:
+            return Suit.J.name
+        return self.suit.name + self.rank.name
 
 
-class Suit(object):
-    """
-    スートを表すクラス
-    """
-    def __init__(self, suit):
-        """
-        define as follows:
-        spade=0, diamond=1, heart=2, club=3
-        """
-        self._suit = suit
+class Rank(enum.IntEnum):
+    Under = 0
+    Three = 1
+    Four = 2
+    Five = 3
+    Six = 4
+    Seven = 5
+    Eight = 6
+    Nine = 7
+    Ten = 8
+    Jack = 9
+    Queen = 10
+    King = 11
+    Ace = 12
+    Two = 13
+    Over = 14
 
-    def get_suit(self):
-        return self._suit
-
-    def is_spade(self):
-        return self._suit == 0
-
-    def is_diamond(self):
-        return self._suit == 1
-
-    def is_heart(self):
-        return self._suit == 2
-
-    def is_club(self):
-        return self._suit == 3
-
-    def __cmp__(self, other):
-        if self._suit < other.get_suit():
-            return 1
-        elif self._suit == other.get_suit():
-            return 0
+    @property
+    def name(self):
+        if self.value == 12 or self.value == 13:
+            return str(self.value - 11)
+        elif self.value == 0 or self.value == 14:
+            return str(self.value)
         else:
-            return -1
-
-    def __str__(self):
-        if self.is_spade():
-            return 's'
-        if self.is_diamond():
-            return 'd'
-        if self.is_heart():
-            return 'h'
-        if self.is_club():
-            return 'c'
-        return 'JOKER'
+            return str(self.value + 2)
 
 
-class Rank(object):
-    def __init__(self, rank):
-        self._rank = rank
-
-    def get_rank(self):
-        return self._rank
-
-    def __cmp__(self, other):
-        if self._rank < other.get_rank():
-            return -1
-        elif self._rank == other.get_rank():
-            return 0
-        else:
-            return 1
-
-    def __str__(self):
-        return str(self._rank)
+class Suit(enum.IntEnum):
+    Null = 0
+    S = 1
+    D = 2
+    H = 4
+    C = 8
+    J = 16
