@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from client.card import Suit
 
 
 class CardState(object):
@@ -6,46 +7,46 @@ class CardState(object):
     場のカード状態を表すクラス
     """
     def __init__(self, cards):
-        self.card_num      = len(cards)
-        self.is_joker_only = self._is_joker_only(cards)
-        self.is_kaidan     = self._is_kaidan(cards)
-        self.is_pair       = self._is_pair(cards)
-        self.max_rank      = self._get_max_rank(cards)
-        self.min_rank      = self._get_min_rank(cards)
-        self.suit          = self._get_suit(cards)
+        self.cards = cards
 
-    def _get_min_rank(self, cards):
-        return cards[0].rank if len(cards) > 0 else -1
+    def __str__(self):
+        s = """
+        card_num      : {0}
+        is_joker_only : {1}
+        is_kaidan     : {2}
+        is_pair       : {3}
+        max card      : {4}
+        min card      : {5}
+        suits         : {6}
+        """.format(self.card_num(), self.is_joker_only(), self.is_kaidan(),
+                   self.is_pair(), self.max_card(), self.min_card(), self.suits())
+        return s
 
-    def _get_max_rank(self, cards):
-        return cards[-1].rank if len(cards) > 0 else -1
+    def card_num(self):
+        return len(self.cards)
 
-    def _get_suit(self, cards):
-        suit = [False] * 5  # スペード、ハート、ダイヤ、クラブ、ジョーカーの順
-        for card in cards:
-            suit[card.suit] = True
-        return suit
+    def min_card(self):
+        return self.cards[0] if len(self.cards) > 0 else []
 
-    def _is_pair(self, cards):
-        return len(cards) >= 1 and self._is_same_rank(cards)
+    def max_card(self):
+        return self.cards[-1] if len(self.cards) > 0 else []
 
-    def _is_kaidan(self, cards):
-        return len(cards) >= 3 and self._is_same_suit(cards)
+    def suits(self):
+        suits = set([card.suit for card in self.cards])
+        suits = sum(suits)
+        return suits
 
-    def _is_joker_only(self, cards):
-        return len(cards) == 1 and cards[0].is_joker()
+    def is_pair(self):
+        return len(self.cards) >= 1 and self._is_same_rank()
 
-    def _is_same_suit(self, cards):
-        return len(set(card.suit for card in cards)) == 1
+    def is_kaidan(self):
+        return len(self.cards) >= 3 and self._is_same_suit()
 
-    def _is_same_rank(self, cards):
-        return len(set(card.rank for card in cards)) == 1
+    def is_joker_only(self):
+        return len(self.cards) == 1 and self.cards[0].suit == Suit.J
 
-    def print_card_state(self):
-        print('card_num      = {}'.format(self.card_num))
-        print('is_joker_only = {}'.format(self.is_joker_only))
-        print('is_kaidan     = {}'.format(self.is_kaidan))
-        print('is_pair       = {}'.format(self.is_pair))
-        print('max_card      = {}'.format(self.max_rank))
-        print('min_card      = {}'.format(self.min_rank))
-        print('suit          = {}'.format(self.suit))
+    def _is_same_suit(self):
+        return len(set(card.suit for card in self.cards)) == 1
+
+    def _is_same_rank(self):
+        return len(set(card.rank for card in self.cards)) == 1
