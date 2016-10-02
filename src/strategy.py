@@ -11,7 +11,7 @@ class Strategy(object):
         self.hand = hand
 
     def select_change_cards(self, exchange_num):
-        pairs = self.hand.generate_pairs()
+        pairs = self.hand.find_pairs()
         cards = pairs[1][:exchange_num]
         if exchange_num == 1:
             return cards[0]
@@ -35,12 +35,12 @@ class Strategy(object):
         場が空で革命が起きていないときの戦略
         @return:
         """
-        kaidans = self.hand.generate_kaidans()
+        kaidans = self.hand.find_kaidans()
         if len(kaidans) != 0:
             max_card_num = max(kaidans)
             return kaidans[max_card_num][0]
 
-        pairs = self.hand.generate_pairs()
+        pairs = self.hand.find_pairs()
         if len(pairs) != 0:
             max_card_num = max(pairs)
             return pairs[max_card_num][0]
@@ -52,12 +52,12 @@ class Strategy(object):
         場が空で革命が起きているときの戦略
         @return:
         """
-        kaidans = self.hand.generate_kaidans()
+        kaidans = self.hand.find_kaidans()
         if len(kaidans) != 0:
             max_card_num = max(kaidans)
             return kaidans[max_card_num][-1]
 
-        pairs = self.hand.generate_pairs()
+        pairs = self.hand.find_pairs()
         if len(pairs) != 0:
             max_card_num = max(pairs)
             return pairs[max_card_num][-1]
@@ -70,12 +70,12 @@ class Strategy(object):
         @return:
         """
         if self.card_state.is_kaidan:
-            kaidans = self.hand.generate_kaidans()
+            kaidans = self.hand.find_kaidans()
             if kaidans.get(self.card_state.card_num, None):
                 return kaidans[self.card_state.card_num][-1]
 
         if self.card_state.is_pair:
-            pairs = self.hand.generate_pairs()
+            pairs = self.hand.find_pairs()
             if pairs.get(self.card_state.card_num, None):
                 return pairs[self.card_state.card_num][-1]
 
@@ -87,12 +87,12 @@ class Strategy(object):
         @return:
         """
         if self.card_state.is_kaidan:
-            kaidans = self.hand.generate_kaidans()
+            kaidans = self.hand.find_kaidans()
             if kaidans.get(self.card_state.card_num, None):
                 return kaidans[self.card_state.card_num][0]
 
         if self.card_state.is_pair:
-            pairs = self.hand.generate_pairs()
+            pairs = self.hand.find_pairs()
             if pairs.get(self.card_state.card_num, None):
                 return pairs[self.card_state.card_num][0]
 

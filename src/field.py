@@ -18,14 +18,14 @@ class Players(object):
 
     def __str__(self):
         s = """
-        is_exchange   : {0}
-        exchange_num  : {1}
-        is_my_turn    : {2}
-        current_player: {3}
-        is_empty      : {4}
-        card_num      : {5}
-        grade         : {6}
-        seats         : {7}
+        is_exchange   : {}
+        exchange_num  : {}
+        is_my_turn    : {}
+        current_player: {}
+        is_empty      : {}
+        card_num      : {}
+        grade         : {}
+        seats         : {}
         """.format(self.is_exchange, self.exchange_num, self.is_my_turn, self.current_player,
                    self.is_empty, self.card_num, self.grade, self.seats)
         return s
@@ -43,9 +43,9 @@ class FieldEffect(object):
 
     def __str__(self):
         s = """
-        11Back : {0}
-        Kakumei: {1}
-        Shibari: {2}
+        11Back : {}
+        Kakumei: {}
+        Shibari: {}
         """.format(self._is_11back, self._is_kakumei, self._is_shibari)
         return s
 

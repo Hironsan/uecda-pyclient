@@ -2,7 +2,7 @@
 from collections import defaultdict
 from itertools import combinations
 
-from .card import Card
+from .card import Card, Suit, Rank
 
 
 class Hand(object):
@@ -30,7 +30,7 @@ class Hand(object):
     def find_pair(self):
         pass
 
-    def generate_kaidans(self):
+    def find_kaidans(self):
         """
         あり得る階段を生成
         階段は階段の枚数ごとにまとめる.
@@ -51,7 +51,7 @@ class Hand(object):
 
         return kaidans_grouped_by_card_num
 
-    def generate_pairs(self):
+    def find_pairs(self):
         """
         あり得るペアを生成
         ペアはペアの枚数ごとにまとめる.
@@ -119,6 +119,6 @@ class Hand(object):
             for rank, flag in enumerate(line):
                 if flag == 0:
                     continue
-                cards.append(Card(rank, suit, flag))
+                cards.append(Card(rank, suit))
         cards.sort()
         return cards

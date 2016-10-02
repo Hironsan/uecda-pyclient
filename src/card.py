@@ -13,7 +13,7 @@ class Card(object):
             return True
         if self.rank == other.rank and self.suit < other.suit:
             return True
-        if other.suit == Suit.J:
+        if other.suit.is_joker():
             return True
         return False
 
@@ -21,9 +21,12 @@ class Card(object):
         return self.rank == other.rank and self.suit == other.suit
 
     def __str__(self):
-        if self.suit is Suit.J:
-            return Suit.J.name
+        if self.suit.is_joker():
+            return self.suit.name
         return self.suit.name + self.rank.name
+
+    def is_joker(self):
+        return self.suit.is_joker()
 
 
 class Rank(enum.IntEnum):
@@ -60,3 +63,6 @@ class Suit(enum.IntEnum):
     H = 4
     C = 8
     J = 16
+
+    def is_joker(self):
+        return self.value == 16

@@ -11,13 +11,13 @@ class CardState(object):
 
     def __str__(self):
         s = """
-        card_num      : {0}
-        is_joker_only : {1}
-        is_kaidan     : {2}
-        is_pair       : {3}
-        max card      : {4}
-        min card      : {5}
-        suits         : {6}
+        card_num      : {}
+        is_joker_only : {}
+        is_kaidan     : {}
+        is_pair       : {}
+        max card      : {}
+        min card      : {}
+        suits         : {}
         """.format(self.card_num(), self.is_joker_only(), self.is_kaidan(),
                    self.is_pair(), self.max_card(), self.min_card(), self.suits())
         return s
@@ -43,7 +43,7 @@ class CardState(object):
         return len(self.cards) >= 3 and self._is_same_suit()
 
     def is_joker_only(self):
-        return len(self.cards) == 1 and self.cards[0].suit == Suit.J
+        return len(self.cards) == 1 and self.cards[0].is_joker()
 
     def _is_same_suit(self):
         return len(set(card.suit for card in self.cards)) == 1
