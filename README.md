@@ -6,7 +6,7 @@ UECコンピュータ大貧民(UECda)用のPythonクライアントです。
 
 ## Requirement
 * Python2.7
-* Python3.5(Highly Recommended)
+* Python3.5 (HIGHLY RECOMMENDED)
 
 ## Usage
 client.py が実行ファイルです。
@@ -16,15 +16,15 @@ client.py が実行ファイルです。
 $ python client.py
 
 The following arguments are optional:
--h    server address [127.0.0.1]
+-a    server address [127.0.0.1]
 -p    port [42485]
 -n    user name < 15 characters [default]
-
+-h    help
 ```
 
 
 たとえば、サーバが同じコンピュータの42485ポートで待ち受けているときに、
-クライアント名と default とする場合、次のように実行します。
+クライアント名を default とする場合、次のように実行します。
 
 ```
 $ python client.py -h 127.0.0.1 -p 42485 -n default
@@ -46,7 +46,7 @@ $ python client.py -n client01
 クライアントを5つ同時に起動する場合、
 
 ```
-$ python client.py & {Enter}
+$ python client.py &
 ```
 
 のように最後に&(アンパサント)をつけると、クライアントがバックグラウンドで実行されるので、5つ続けて同時に起動できます
