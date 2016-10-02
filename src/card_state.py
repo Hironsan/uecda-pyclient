@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from client.card import Suit
+from src.card import Suit
 
 
 class CardState(object):

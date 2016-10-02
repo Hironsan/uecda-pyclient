@@ -1,6 +1,6 @@
 # -- coding: utf-8 -*-
 import unittest
-from client.card import Card, Rank, Suit
+from src.card import Card, Rank, Suit
 
 
 class RankTest(unittest.TestCase):

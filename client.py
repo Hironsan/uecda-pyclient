@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import enum
-from .connection import Connection
-from .option_parser import OptParser
-from .card_state import CardState
-from .strategy import Strategy
-from .hand import Hand
-from .field import Field
+from src.connection import Connection
+from src.option_parser import OptParser
+from src.card_state import CardState
+from src.strategy import Strategy
+from src.hand import Hand
+from src.field import Field
 
 
 class Game(enum.Enum):
