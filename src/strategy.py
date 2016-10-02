@@ -10,13 +10,8 @@ class Strategy(object):
         self.field = field
         self.hand = hand
 
-    def select_change_cards(self, exchange_num):
-        pairs = self.hand.find_pairs()
-        cards = pairs[1][:exchange_num]
-        if exchange_num == 1:
-            return cards[0]
-        else:
-            return cards[0][0], cards[1][0]
+    def select_change_cards(self):
+        return self.hand[:self.field.exchange_num]
 
     def select_cards(self):
         if self.field.is_empty:

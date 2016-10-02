@@ -24,12 +24,6 @@ class Hand(object):
     def select_change_cards(self, exchange_num):
         return self.cards[:exchange_num]
 
-    def find_kaidan(self):
-        pass
-
-    def find_pair(self):
-        pass
-
     def find_kaidans(self):
         """
         あり得る階段を生成
