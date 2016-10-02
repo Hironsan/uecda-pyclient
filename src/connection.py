@@ -7,8 +7,12 @@ signal.signal(signal.SIGPIPE, signal.SIG_IGN)
 
 class Connection(object):
     """
-    通信用のクラス
+    サーバとの通信用クラス
     """
+
+    BINARY_INT = '!1I'
+    BINARY_TABLE = '!120I'
+
     def __init__(self, addr='127.0.0.1', port=42485):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
         self.sock.connect((addr, port))
@@ -21,13 +25,13 @@ class Connection(object):
 
     def recv_int(self):
         unpacked_value = self._recv_msg(byte_length=4)
-        s = struct.Struct('!1I')
+        s = struct.Struct(self.BINARY_INT)
         integer = s.unpack(unpacked_value)
         return integer[0]
 
     def recv_table(self):
         unpacked_value = self._recv_msg(byte_length=480)
-        s = struct.Struct('!120I')
+        s = struct.Struct(self.BINARY_TABLE)
         ls = s.unpack(unpacked_value)
         table = [ls[15 * i: 15 * (i + 1)][:] for i in range(8)]  # 8x15のリストに変換
         return table
@@ -51,7 +55,7 @@ class Connection(object):
 
     def send_table(self, table):
         ls = [item for inner in table for item in inner]  # 2次元リストを1次元に変換
-        s = struct.Struct('!120I')
+        s = struct.Struct(self.BINARY_TABLE)
         packed_value = s.pack(*ls)
         self._send_msg(packed_value)
 
