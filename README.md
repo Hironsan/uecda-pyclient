@@ -27,7 +27,7 @@ The following arguments are optional:
 クライアント名を default とする場合、次のように実行します。
 
 ```
-$ python client.py -h 127.0.0.1 -p 42485 -n default
+$ python client.py -a 127.0.0.1 -p 42485 -n default
 ```
 
 これは次の様に省略した場合と同じ設定となります。
