@@ -7,24 +7,28 @@ class Players(object):
     """
 
     def __init__(self, table):
-        self.is_exchange    = table[5][0]     # カード交換中か
-        self.exchange_num   = table[5][1]     # カード交換の枚数
-        self.is_my_turn     = table[5][2]     # 自分のターンか
-        self.current_player = table[5][3]     # 何番目のプレイヤーのターンか
-        self.is_empty       = table[5][4]     # 場が流れたか
-        self.card_num = table[6][0:5]    # プレイヤーの手札枚数
-        self.grade    = table[6][5:10]   # プレイヤーの階級
-        self.seats    = table[6][10:15]  # どこに誰が座っているか
+        self.is_exchange    = bool(table[5][0])  # カード交換中か
+        self.exchange_num   = table[5][1]        # カード交換の枚数
+        self.is_my_turn     = bool(table[5][2])  # 自分のターンか
+        self.current_player = table[5][3]        # 何番目のプレイヤーのターンか
+        self.is_empty       = bool(table[5][4])  # 場が流れたか
+        self.card_num       = table[6][0:5]      # プレイヤーの手札枚数
+        self.grade          = table[6][5:10]     # プレイヤーの階級
+        self.seats          = table[6][10:15]    # どこに誰が座っているか
 
-    def print_field_state(self):
-        print('is_exchange      = {}'.format(self.is_exchange))
-        print('exchange_num     = {}'.format(self.exchange_num))
-        print('is_my_turn       = {}'.format(self.is_my_turn))
-        print('current_player   = {}'.format(self.current_player))
-        print('is_empty         = {}'.format(self.is_empty))
-        print('card_num = {}'.format(self.card_num))
-        print('grade    = {}'.format(self.grade))
-        print('seats    = {}'.format(self.seats))
+    def __str__(self):
+        s = """
+        is_exchange   : {0}
+        exchange_num  : {1}
+        is_my_turn    : {2}
+        current_player: {3}
+        is_empty      : {4}
+        card_num      : {5}
+        grade         : {6}
+        seats         : {7}
+        """.format(self.is_exchange, self.exchange_num, self.is_my_turn, self.current_player,
+                   self.is_empty, self.card_num, self.grade, self.seats)
+        return s
 
 
 class FieldEffect(object):
