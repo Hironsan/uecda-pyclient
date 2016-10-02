@@ -1,21 +1,62 @@
 # UECda-pyclient
-Python Client for UECda.
+Basic UECda Client written in Python.
 
 ## Description
-
-## Demo
+UECコンピュータ大貧民(UECda)用のPythonクライアントです。
 
 ## Requirement
 * Python2.7
-* Python3.5
+* Python3.5(Highly Recommended)
 
 ## Usage
+client.py が実行ファイルです。
+この実行ファイルは次のような形式で実行できます。
+
+```
+$ python client.py
+
+The following arguments are optional:
+-h    server address [127.0.0.1]
+-p    port [42485]
+-n    user name < 15 characters [default]
+
+```
+
+
+たとえば、サーバが同じコンピュータの42485ポートで待ち受けているときに、
+クライアント名と default とする場合、次のように実行します。
+
+```
+$ python client.py -h 127.0.0.1 -p 42485 -n default
+```
+
+これは次の様に省略した場合と同じ設定となります。
 
 ```
 $ python client.py
 ```
 
+また、下記のように任意のものだけ指定することもできます。
+この例はクライアント名を client01 と指定しています。
+
+```
+$ python client.py -n client01
+```
+
+クライアントを5つ同時に起動する場合、
+
+```
+$ python client.py & {Enter}
+```
+
+のように最後に&(アンパサント)をつけると、クライアントがバックグラウンドで実行されるので、5つ続けて同時に起動できます
+
+
 ## Install
+
+```
+$ pip install -r requirements.txt
+```
 
 ## Licence
 
