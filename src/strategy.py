@@ -1,4 +1,58 @@
 # -*- coding: utf-8 -*-
+from abc import ABC, abstractmethod
+
+
+class StrategyFactory(object):
+    """
+    Strategyを生成するFactory
+    以下のような感じで使う。
+    >>> factory = StrategyFactory()
+    >>> strategy = factory.create(hand, field)
+    >>> cards = strategy.select_cards()
+    """
+    def __init__(self, hand, field):
+        self._hand = hand
+        self._field = field
+
+    def create(self):
+        if self._field.is_forward():
+            return ForwardStrategy(self._hand, self._field)
+        else:
+            return ReverseStrategy(self._hand, self._field)
+
+
+class BaseStrategy(ABC):
+    """
+    Strategyの抽象クラス
+    """
+
+    @abstractmethod
+    def select_cards(self):
+        pass
+
+
+class ForwardStrategy(BaseStrategy):
+    """
+    カードの強さが逆転していない時の戦略を実装するクラス
+    """
+
+    def __init__(self, hand, field):
+        pass
+
+    def select_cards(self):
+        pass
+
+
+class ReverseStrategy(BaseStrategy):
+    """
+    カードの強さが逆転している時の戦略を実装するクラス
+    """
+
+    def __init__(self, hand, field):
+        pass
+
+    def select_cards(self):
+        pass
 
 
 class Strategy(object):
