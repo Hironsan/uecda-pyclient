@@ -31,6 +31,18 @@ class BaseStrategy(ABC):
         pass
 
 
+class ExchangeStrategy(BaseStrategy):
+    """
+    カードの交換戦略を実装するクラス
+    """
+
+    def __init__(self, hand, field):
+        pass
+
+    def select_cards(self):
+        pass
+
+
 class ForwardStrategy(BaseStrategy):
     """
     カードの強さが逆転していない時の戦略を実装するクラス
