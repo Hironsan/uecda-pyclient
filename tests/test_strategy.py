@@ -3,7 +3,7 @@ import unittest
 from src.field import FieldEffect
 from src.hand import Hand
 from src.card_state import CardState
-from src.strategy import StrategyFactory, ForwardStrategy, ReverseStrategy
+from src.strategy import StrategyFactory, ExchangeStrategy, ForwardStrategy, ReverseStrategy
 
 
 class StrategyFactoryTest(unittest.TestCase):
@@ -20,6 +20,20 @@ class StrategyFactoryTest(unittest.TestCase):
         self.field_effect = FieldEffect()
 
     def test_create(self):
+        pass
+
+
+class ExchangeStrategyTest(unittest.TestCase):
+
+    def setUp(self):
+        """
+        様々な手札を用意しておく。
+        """
+        self.hand = Hand()
+        self.card_state = CardState()
+        self.field_effect = FieldEffect()
+
+    def test_select_cards(self):
         pass
 
 
