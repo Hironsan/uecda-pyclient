@@ -7,14 +7,14 @@ class Players(object):
     """
 
     def __init__(self, table):
-        self.is_exchange    = bool(table[5][0])  # カード交換中か
-        self.exchange_num   = table[5][1]        # カード交換の枚数
-        self.is_my_turn     = bool(table[5][2])  # 自分のターンか
-        self.current_player = table[5][3]        # 何番目のプレイヤーのターンか
-        self.is_empty       = bool(table[5][4])  # 場が流れたか
-        self.card_num       = table[6][0:5]      # プレイヤーの手札枚数
-        self.grade          = table[6][5:10]     # プレイヤーの階級
-        self.seats          = table[6][10:15]    # どこに誰が座っているか
+        self._is_exchange    = bool(table[5][0])  # カード交換中か
+        self._exchange_num   = table[5][1]        # カード交換の枚数
+        self._is_my_turn     = bool(table[5][2])  # 自分のターンか
+        self._current_player = table[5][3]        # 何番目のプレイヤーのターンか
+        self._is_empty       = bool(table[5][4])  # 場が流れたか
+        self._card_num       = table[6][0:5]      # プレイヤーの手札枚数
+        self._class          = table[6][5:10]     # プレイヤーの階級
+        self._seats          = table[6][10:15]    # どこに誰が座っているか
 
     def __str__(self):
         s = """
@@ -24,10 +24,10 @@ class Players(object):
         current_player: {}
         is_empty      : {}
         card_num      : {}
-        grade         : {}
+        class         : {}
         seats         : {}
-        """.format(self.is_exchange, self.exchange_num, self.is_my_turn, self.current_player,
-                   self.is_empty, self.card_num, self.grade, self.seats)
+        """.format(self._is_exchange, self._exchange_num, self._is_my_turn, self._current_player,
+                   self._is_empty, self._card_num, self._class, self._seats)
         return s
 
 

@@ -21,9 +21,6 @@ class Hand(object):
     def __getitem__(self, item):
         return self.cards[item]
 
-    def select_change_cards(self, exchange_num):
-        return self.cards[:exchange_num]
-
     def find_kaidans(self):
         """
         あり得る階段を生成

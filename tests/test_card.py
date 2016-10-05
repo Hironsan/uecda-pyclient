@@ -20,7 +20,7 @@ class CardTest(unittest.TestCase):
         d3 = Card(Rank.Three, Suit.D)
         d2 = Card(Rank.Two, Suit.D)
         c2 = Card(Rank.Two, Suit.C)
-        joker = Joker(Rank.Ace, Suit.J)
+        joker = Joker(Rank.Ace, Suit.X)
         self.assertTrue(d3 < d2)
         self.assertTrue(d2 > d3)
         self.assertTrue(d2 < c2)
@@ -31,5 +31,4 @@ class CardTest(unittest.TestCase):
 
     def test_str(self):
         self.assertEqual(str(Card(Rank.Ace, Suit.C)), 'C1')
-        self.assertEqual(str(Card(Rank.Ace, Suit.Null)), 'Null1')
-        self.assertEqual(str(Card(Rank.Ace, Suit.J)), 'J')
+        self.assertEqual(str(Card(Rank.Ace, Suit.X)), 'X1')

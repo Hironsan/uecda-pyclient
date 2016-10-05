@@ -2,7 +2,7 @@
 import enum
 from src.connection import Connection
 from src.option_parser import OptParser
-from src.card_state import CardState
+from src.cards import Cards
 from src.strategy import Strategy
 from src.hand import Hand
 from src.field import Field
@@ -36,11 +36,11 @@ def run():
             hand = Hand(table)
             field = Field(table)
             if field.is_exchange and field.exchange_num > 0:      # カード交換をする場合は
-                strategy = Strategy(hand, field, CardState([]))   # カード選択のための戦略クラスを生成する
+                strategy = Strategy(hand, field, Cards([]))   # カード選択のための戦略クラスを生成する
                 cards = strategy.select_change_cards()            # カード交換用のカードを選択する
                 table = cards.decode()
                 conn.send_table(table)                            # 選択したカードを提出する
-            card_state = CardState([])
+            card_state = Cards([])
             while end_flag is Game.cont:
                 # During a game
                 table = conn.recv_table()                         # 手札と場の状態を受け取る
@@ -55,7 +55,7 @@ def run():
 
                 table = conn.recv_table()                         # 場のカードを受け取る
                 field_cards = Hand(table)
-                card_state = CardState(field_cards)               # 場のカード状態を決定する
+                card_state = Cards(field_cards)               # 場のカード状態を決定する
 
                 update_field(conn)
                 end_flag = update_end_flag(conn)

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from src.card import Suit
 
 
-class CardState(object):
+class Cards(object):
     """
     場のカード状態を表すクラス
     """

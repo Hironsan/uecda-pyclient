@@ -21,7 +21,7 @@ class Card(object):
         return self.rank == other.rank and self.suit == other.suit
 
     def __str__(self):
-        if self.suit.is_joker():
+        if self.is_joker():
             return self.suit.name
         return self.suit.name + self.rank.name
 
@@ -68,7 +68,4 @@ class Suit(enum.IntEnum):
     D = 2
     H = 4
     C = 8
-    J = 16
-
-    def is_joker(self):
-        return self.value == 16
+    X = 16
