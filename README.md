@@ -1,5 +1,5 @@
 # UECda-pyclient
-Basic UECda Client written in Python.
+Standard UECda Client written in Python.
 
 ## Description
 UECda-PyClientはコンピュータ大貧民大会であるUECdaのためのPythonクライアントです。

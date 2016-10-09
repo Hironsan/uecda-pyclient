@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-from src.field import FieldEffect, Players
+from src.table import FieldEffect, Players
 
 
 class FieldEffectTest(unittest.TestCase):

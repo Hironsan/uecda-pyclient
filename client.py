@@ -5,7 +5,7 @@ from src.option_parser import OptParser
 from src.cards import Cards
 from src.strategy import Strategy
 from src.hand import Hand
-from src.field import Field
+from src.table import Table
 
 
 class Game(enum.Enum):
@@ -32,29 +32,29 @@ def run():
         end_flag = Game.cont
         while end_flag is not Game.over:
             # Before a game
-            table = conn.recv_table()                             # 手札を受け取る
-            hand = Hand(table)
-            field = Field(table)
-            if field.is_exchange and field.exchange_num > 0:      # カード交換をする場合は
-                strategy = Strategy(hand, field, Cards([]))   # カード選択のための戦略クラスを生成する
+            data = conn.recv_table()                             # 手札を受け取る
+            hand = Hand(data)
+            table = Table(data)
+            if table.is_exchange and table.exchange_num > 0:      # カード交換をする場合は
+                strategy = Strategy(hand, table, Cards([]))   # カード選択のための戦略クラスを生成する
                 cards = strategy.select_change_cards()            # カード交換用のカードを選択する
-                table = cards.decode()
-                conn.send_table(table)                            # 選択したカードを提出する
+                data = cards.decode()
+                conn.send_table(data)                            # 選択したカードを提出する
             card_state = Cards([])
             while end_flag is Game.cont:
                 # During a game
-                table = conn.recv_table()                         # 手札と場の状態を受け取る
-                hand = Hand(table)
-                field = Field(table)
-                if field.is_my_turn:                              # 自分の番だったら
-                    strategy = Strategy(hand, field, card_state)  # カード選択のための戦略クラスを生成する
+                data = conn.recv_table()                         # 手札と場の状態を受け取る
+                hand = Hand(data)
+                table = Table(data)
+                if table.is_my_turn:                              # 自分の番だったら
+                    strategy = Strategy(hand, table, card_state)  # カード選択のための戦略クラスを生成する
                     cards = strategy.select_cards()               # カードを選択する
-                    table = cards.decode()
-                    conn.send_table(table)                        # 選択したカードを提出する
+                    data = cards.decode()
+                    conn.send_table(data)                        # 選択したカードを提出する
                     was_accepted = conn.recv_int()                # 受理されたかを受け取る
 
-                table = conn.recv_table()                         # 場のカードを受け取る
-                field_cards = Hand(table)
+                data = conn.recv_table()                         # 場のカードを受け取る
+                field_cards = Hand(data)
                 card_state = Cards(field_cards)               # 場のカード状態を決定する
 
                 update_field(conn)

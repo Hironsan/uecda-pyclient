@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-from src.field import FieldEffect
+from src.table import FieldEffect
 from src.hand import Hand
 from src.cards import Cards
 from src.strategy import StrategyFactory, ExchangeStrategy, ForwardStrategy, ReverseStrategy
