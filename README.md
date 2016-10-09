@@ -2,7 +2,9 @@
 Basic UECda Client written in Python.
 
 ## Description
-UECコンピュータ大貧民(UECda)用のPythonクライアントです。
+UECda-PyClientはコンピュータ大貧民大会であるUECdaのためのPythonクライアントです。
+Pythonで書かれたことで、短くわかりやすいコードになりました。
+また、TensorFlowやChainer、Theano等の機械学習ライブラリの使用にも適しています。
 
 ## Requirement
 * Python2.7

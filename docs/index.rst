@@ -30,10 +30,10 @@ UECda-PyClientを動かすために必要なライブラリをインストール
     pip install -r requirements.txt
 
 **Prerequisites**: UECda-PyClientはPython 2.7 と Python 3.4+で実行することができます。
-ただし、Python3.5で実行することを強く推奨します。
+ただし、Python 3.5で実行することを強く推奨します。
 
 **Platforms**: UECda-PyClientはどんなUnixライクなプラットフォーム上でも実行することができます。
-またWindows上でも実行することができますが推奨はしません。
+またWindows上でも実行することができます。ただし、推奨はしません。
 
 
 
