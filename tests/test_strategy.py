@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-from src.table import FieldEffect
+from src.table import TableEffect
 from src.hand import Hand
 from src.cards import Cards
 from src.strategy import StrategyFactory, ExchangeStrategy, ForwardStrategy, ReverseStrategy
@@ -17,7 +17,7 @@ class StrategyFactoryTest(unittest.TestCase):
         """
         self.hand = Hand()
         self.card_state = Cards()
-        self.field_effect = FieldEffect()
+        self.field_effect = TableEffect()
 
     def test_create(self):
         pass
@@ -31,7 +31,7 @@ class ExchangeStrategyTest(unittest.TestCase):
         """
         self.hand = Hand()
         self.card_state = Cards()
-        self.field_effect = FieldEffect()
+        self.field_effect = TableEffect()
 
     def test_select_cards(self):
         pass
@@ -45,7 +45,7 @@ class ForwardStrategyTest(unittest.TestCase):
         """
         self.hand = Hand()
         self.card_state = Cards()
-        self.field_effect = FieldEffect()
+        self.field_effect = TableEffect()
 
     def test_select_cards(self):
         pass
@@ -59,7 +59,7 @@ class ReverseStrategyTest(unittest.TestCase):
         """
         self.hand = Hand()
         self.card_state = Cards()
-        self.field_effect = FieldEffect()
+        self.field_effect = TableEffect()
 
     def test_select_cards(self):
         pass
