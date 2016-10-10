@@ -40,7 +40,7 @@ class Connection(object):
         unpacked_data = b''
         while len(unpacked_data) < byte_length:
             chunk = self.sock.recv(byte_length - len(unpacked_data), 0)
-            if chunk == '':
+            if chunk == b'':
                 raise RuntimeError('socket connection broken')
             unpacked_data += chunk
         return unpacked_data

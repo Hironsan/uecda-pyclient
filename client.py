@@ -32,6 +32,7 @@ def run():
         player_id = conn.recv_int()               # プレイヤーidを受け取る
         game = Game()
         while not game.is_over():
+            game = Game()
             # Before a game
             data = conn.recv_table()                             # 手札を受け取る
             hand = Hand(data)
@@ -40,7 +41,8 @@ def run():
                 factory = StrategyFactory(hand, table)   # カード選択のための戦略クラスを生成する
                 strategy = factory.create()
                 cards = strategy.select_cards()            # カード交換用のカードを選択する
-                data = cards.decode()
+                #data = cards.decode()
+                data = [[0] * 15 for i in range(8)]
                 conn.send_table(data)                            # 選択したカードを提出する
 
             while game.continues():
@@ -52,7 +54,8 @@ def run():
                     factory = StrategyFactory(hand, table)   # カード選択のための戦略クラスを生成する
                     strategy = factory.create()
                     cards = strategy.select_cards()               # カードを選択する
-                    data = cards.decode()
+                    #data = cards.decode()
+                    data = [[0] * 15 for i in range(8)]
                     conn.send_table(data)                        # 選択したカードを提出する
                     was_accepted = conn.recv_int()                # 受理されたかを受け取る
 
@@ -60,7 +63,6 @@ def run():
                 field_cards = Hand(data)
                 card_state = Cards(field_cards)               # 場のカード状態を決定する
 
-                data = conn.recv_table()  # update field
                 end_flag = conn.recv_int()
                 game.set_end_flag(end_flag)
 

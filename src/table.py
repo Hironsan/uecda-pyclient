@@ -2,7 +2,18 @@
 
 
 class Table(object):
-    pass
+
+    def __init__(self, data):
+        self._effect = TableEffect(data)
+        self.is_exchange    = bool(data[5][0])  # カード交換中か
+        self.exchange_num   = data[5][1]        # カード交換の枚数
+        self.is_my_turn     = bool(data[5][2])  # 自分のターンか
+
+    def is_forward(self):
+        return self._effect.is_forward()
+
+    def is_shibari(self):
+        return self._effect.is_shibari()
 
 
 class TableEffect(object):
