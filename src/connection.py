@@ -37,7 +37,7 @@ class Connection(object):
         return table
 
     def _recv_msg(self, byte_length):
-        unpacked_data = ''
+        unpacked_data = b''
         while len(unpacked_data) < byte_length:
             chunk = self.sock.recv(byte_length - len(unpacked_data), 0)
             if chunk == '':
