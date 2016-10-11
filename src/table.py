@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
+"""
 class Table(object):
 
     def __init__(self, data):
@@ -14,7 +14,7 @@ class Table(object):
 
     def is_shibari(self):
         return self._effect.is_shibari()
-
+"""
 
 class TableEffect(object):
     """

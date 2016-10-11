@@ -2,7 +2,7 @@
 import unittest
 from src.table import TableEffect
 from src.hand import Hand
-from src.cards import Cards
+from src.cards import TableCards
 from src.strategy import StrategyFactory, ExchangeStrategy, ForwardStrategy, ReverseStrategy
 
 
@@ -16,7 +16,7 @@ class StrategyFactoryTest(unittest.TestCase):
         * 非革命状態
         """
         self.hand = Hand()
-        self.card_state = Cards()
+        self.card_state = TableCards()
         self.field_effect = TableEffect()
 
     def test_create(self):
@@ -30,7 +30,7 @@ class ExchangeStrategyTest(unittest.TestCase):
         様々な手札を用意しておく。
         """
         self.hand = Hand()
-        self.card_state = Cards()
+        self.card_state = TableCards()
         self.field_effect = TableEffect()
 
     def test_select_cards(self):
@@ -44,7 +44,7 @@ class ForwardStrategyTest(unittest.TestCase):
         様々な手札、場の状態を用意しておく。
         """
         self.hand = Hand()
-        self.card_state = Cards()
+        self.card_state = TableCards()
         self.field_effect = TableEffect()
 
     def test_select_cards(self):
@@ -58,7 +58,7 @@ class ReverseStrategyTest(unittest.TestCase):
         様々な手札、場の状態を用意しておく。
         """
         self.hand = Hand()
-        self.card_state = Cards()
+        self.card_state = TableCards()
         self.field_effect = TableEffect()
 
     def test_select_cards(self):

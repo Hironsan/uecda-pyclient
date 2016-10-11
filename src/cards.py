@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-class Cards(object):
+class TableCards(object):
     """
     場のカード状態を表すクラス
     """
