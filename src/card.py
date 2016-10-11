@@ -66,6 +66,6 @@ class Suit(enum.IntEnum):
     Null = 0
     S = 1
     D = 2
-    H = 4
-    C = 8
-    X = 16
+    H = 3
+    C = 4
+    X = 5

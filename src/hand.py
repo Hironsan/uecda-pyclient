@@ -2,7 +2,7 @@
 from collections import defaultdict
 from itertools import combinations
 
-from .card import Card, Suit, Rank
+from .card import Card, Joker, Suit, Rank
 
 
 class Hand(object):
@@ -10,7 +10,7 @@ class Hand(object):
     手札を表すクラス
     """
     def __init__(self, cards):
-        self.cards = cards
+        self.cards = self._encode(cards)
 
     def __str__(self):
         return ' '.join(str(card) for card in self.cards)
@@ -84,7 +84,7 @@ class Hand(object):
 
         return cards_grouped_by_suit
 
-    def encode(self, cards):
+    def _decode(self, cards):
         """
         Cardオブジェクトのリストを2次元配列に変換する
         @return:
@@ -95,21 +95,27 @@ class Hand(object):
                 if len(cards) == 1:
                     table[0][0] = 2
                 else:
-                    table[card.suit][card.rank] = 2
+                    table[card.suit.value][card.rank.value] = 2
             else:
-                table[card.suit][card.rank] = 1
+                table[card.suit.value][card.rank.value] = 1
         return table
 
-    def decode(self, table):
+    def _encode(self, data):
         """
         2次元配列をCardオブジェクトのリストに変換する
         @return:
         """
         cards = []
-        for suit, line in enumerate(table[:5]):
+        for suit, line in enumerate(data[:5]):
             for rank, flag in enumerate(line):
                 if flag == 0:
                     continue
-                cards.append(Card(rank, suit))
+                elif flag == 1:
+                    cards.append(Card(Rank(rank), Suit(suit)))
+                elif flag == 2:
+                    cards.append(Joker(Rank(rank), Suit(suit)))
+                else:
+                    print('Flag is not understood.')
+                    raise
         cards.sort()
         return cards
