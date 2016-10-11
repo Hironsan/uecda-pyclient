@@ -7,24 +7,28 @@ class StrategyFactory(object):
     Strategyを生成するFactory
     以下のような感じで使う。
     >>> factory = StrategyFactory()
-    >>> strategy = factory.create(hand, field)
+    >>> strategy = factory.create(hand, table)
     >>> cards = strategy.select_cards()
     """
-    def __init__(self, hand, field):
+    def __init__(self, hand, table):
         self._hand = hand
-        self._field = field
+        self._table = table
 
     def create(self):
-        if self._field.is_forward():
-            return ForwardStrategy(self._hand, self._field)
+        if self._table.is_forward():
+            return ForwardStrategy(self._hand, self._table)
         else:
-            return ReverseStrategy(self._hand, self._field)
+            return ReverseStrategy(self._hand, self._table)
 
 
 class BaseStrategy(ABC):
     """
     Strategyの抽象クラス
     """
+
+    def __init__(self, hand, table):
+        self._hand = hand
+        self._table = table
 
     @abstractmethod
     def select_cards(self):
@@ -36,9 +40,6 @@ class ExchangeStrategy(BaseStrategy):
     カードの交換戦略を実装するクラス
     """
 
-    def __init__(self, hand, field):
-        pass
-
     def select_cards(self):
         pass
 
@@ -48,20 +49,32 @@ class ForwardStrategy(BaseStrategy):
     カードの強さが逆転していない時の戦略を実装するクラス
     """
 
-    def __init__(self, hand, field):
-        pass
-
     def select_cards(self):
-        pass
+        if self._table.is_kaidan():
+            kaidans = self._hand.find_kaidans()
+            if kaidans.get(self._table.card_num, None):
+                return kaidans[self._table.card_num][-1]
+
+        if self._table.is_pair():
+            pairs = self._hand.find_pairs()
+            if pairs.get(self._table.card_num, None):
+                return pairs[self._table.card_num][-1]
+
+        return []
+
+
+class SequenceStrategy(BaseStrategy):
+    pass
+
+
+class GroupStrategy(BaseStrategy):
+    pass
 
 
 class ReverseStrategy(BaseStrategy):
     """
     カードの強さが逆転している時の戦略を実装するクラス
     """
-
-    def __init__(self, hand, field):
-        pass
 
     def select_cards(self):
         pass
@@ -71,22 +84,22 @@ class Strategy(object):
     """
     カード提出の戦略を記すクラス
     """
-    def __init__(self, hand, field, card_state):
+    def __init__(self, hand, table, card_state):
         self.card_state = card_state
-        self.field = field
+        self.table = table
         self.hand = hand
 
     def select_change_cards(self):
-        return self.hand[:self.field.exchange_num]
+        return self.hand[:self.table.exchange_num]
 
     def select_cards(self):
-        if self.field.is_empty:
-            if self.field.is_kakumei:
+        if self.table.is_empty:
+            if self.table.is_kakumei:
                 return self.lead_under_kakumei()
             else:
                 return self.lead()
         else:
-            if self.field.is_kakumei:
+            if self.table.is_kakumei:
                 return self.follow_under_kakumei()
             else:
                 return self.follow()
