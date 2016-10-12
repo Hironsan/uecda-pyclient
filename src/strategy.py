@@ -58,16 +58,6 @@ class ForwardStrategy(BaseStrategy):
     """
 
     def select_cards(self):
-        """
-        card_num = self._table_cards.card_num
-        if card_num:
-            strategy = FollowStrategy(self._hand, self._table_effect, self._table_cards)
-        else:
-            strategy = LeadStrategy(self._hand, self._table_effect, self._table_cards)
-        cards = strategy.select_cards()
-
-        return cards
-        """
         if self._table_cards.is_kaidan():
             kaidans = self._hand.find_kaidans()
             if kaidans.get(self._table_cards.card_num, None):
@@ -86,28 +76,15 @@ class FollowStrategy(BaseStrategy):
     def select_cards(self):
         if self._table_cards.is_kaidan():
             kaidans = self._hand.find_kaidans()
-            if kaidans.get(self._table_cards.card_num, None):
-                return kaidans[self._table_cards.card_num][-1]
+            if kaidans.get(self._table_cards.card_num(), None):
+                return kaidans[self._table_cards.card_num()][-1]
 
         if self._table_cards.is_pair():
             pairs = self._hand.find_pairs()
-            if pairs.get(self._table_cards.card_num, None):
-                return pairs[self._table_cards.card_num][-1]
+            if pairs.get(self._table_cards.card_num(), None):
+                return pairs[self._table_cards.card_num()][-1]
 
         return []
-        """
-        if self._table_cards.is_kaidan():
-            strategy = SequenceStrategy(self._hand, self._table_effect, self._table_cards)
-        elif self._table_cards.is_pair():
-            strategy = GroupStrategy(self._hand, self._table_effect, self._table_cards)
-        else:
-            print('Strategy not found.')
-            print(self._table_cards)
-            raise
-        cards = strategy.select_cards()
-
-        return cards
-        """
 
 
 class LeadStrategy(BaseStrategy):
