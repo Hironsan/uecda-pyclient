@@ -41,13 +41,14 @@ class Client(object):
             game = Game()
             while not game.is_over():
                 game = Game()
+                table_cards = TableCards([])
                 # Before a game
                 data = conn.recv_table()                             # 手札を受け取る
                 hand = Hand(data)
-                table = TableEffect(data)
+                table_effect = TableEffect(data)
                 player = Player(data)
                 if player.needs_exchange():      # カード交換をする場合は
-                    factory = StrategyFactory(hand, table)   # カード選択のための戦略クラスを生成する
+                    factory = StrategyFactory(hand, table_effect, table_cards)   # カード選択のための戦略クラスを生成する
                     strategy = factory.create()
                     cards = strategy.select_cards()            # カード交換用のカードを選択する
                     #data = cards.decode()
@@ -58,14 +59,15 @@ class Client(object):
                     # During a game
                     data = conn.recv_table()                         # 手札と場の状態を受け取る
                     hand = Hand(data)
-                    table = TableEffect(data)
+                    table_effect = TableEffect(data)
                     player = Player(data)
                     if player.can_submit():                              # 自分の番だったら
-                        factory = StrategyFactory(hand, table)   # カード選択のための戦略クラスを生成する
+                        factory = StrategyFactory(hand, table_effect, table_cards)   # カード選択のための戦略クラスを生成する
                         strategy = factory.create()
                         cards = strategy.select_cards()               # カードを選択する
-                        #data = cards.decode()
-                        data = [[0] * 15 for i in range(8)]
+                        print(table_cards)
+                        print(' '.join(str(card) for card in cards))
+                        data = TableCards._decode(cards)
                         conn.send_table(data)                        # 選択したカードを提出する
                         was_accepted = conn.recv_int()                # 受理されたかを受け取る
 

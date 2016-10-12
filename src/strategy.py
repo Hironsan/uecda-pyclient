@@ -7,18 +7,25 @@ class StrategyFactory(object):
     Strategyを生成するFactory
     以下のような感じで使う。
     >>> factory = StrategyFactory()
-    >>> strategy = factory.create(hand, table)
+    >>> strategy = factory.create(hand, table_effect, table_cards)
     >>> cards = strategy.select_cards()
     """
-    def __init__(self, hand, table):
+    def __init__(self, hand, table_effect, table_cards):
         self._hand = hand
-        self._table = table
+        self._table_effect = table_effect
+        self._table_cards = table_cards
 
     def create(self):
-        if self._table.is_forward():
-            return ForwardStrategy(self._hand, self._table)
+        if self._table_cards.card_num() == 0:
+            return LeadStrategy(self._hand, self._table_effect, self._table_cards)
         else:
-            return ReverseStrategy(self._hand, self._table)
+            return FollowStrategy(self._hand, self._table_effect, self._table_cards)
+        """
+        if self._table_effect.is_forward():
+            return ForwardStrategy(self._hand, self._table_effect, self._table_cards)
+        else:
+            return ReverseStrategy(self._hand, self._table_effect, self._table_cards)
+        """
 
 
 class BaseStrategy(ABC):
@@ -26,9 +33,10 @@ class BaseStrategy(ABC):
     Strategyの抽象クラス
     """
 
-    def __init__(self, hand, table):
+    def __init__(self, hand, table_effect, table_cards):
         self._hand = hand
-        self._table = table
+        self._table_effect = table_effect
+        self._table_cards = table_cards
 
     @abstractmethod
     def select_cards(self):
@@ -50,25 +58,84 @@ class ForwardStrategy(BaseStrategy):
     """
 
     def select_cards(self):
-        if self._table.is_kaidan():
-            kaidans = self._hand.find_kaidans()
-            if kaidans.get(self._table.card_num, None):
-                return kaidans[self._table.card_num][-1]
+        """
+        card_num = self._table_cards.card_num
+        if card_num:
+            strategy = FollowStrategy(self._hand, self._table_effect, self._table_cards)
+        else:
+            strategy = LeadStrategy(self._hand, self._table_effect, self._table_cards)
+        cards = strategy.select_cards()
 
-        if self._table.is_pair():
+        return cards
+        """
+        if self._table_cards.is_kaidan():
+            kaidans = self._hand.find_kaidans()
+            if kaidans.get(self._table_cards.card_num, None):
+                return kaidans[self._table_cards.card_num][-1]
+
+        if self._table_cards.is_pair():
             pairs = self._hand.find_pairs()
-            if pairs.get(self._table.card_num, None):
-                return pairs[self._table.card_num][-1]
+            if pairs.get(self._table_cards.card_num, None):
+                return pairs[self._table_cards.card_num][-1]
+
+        return []
+
+
+class FollowStrategy(BaseStrategy):
+
+    def select_cards(self):
+        if self._table_cards.is_kaidan():
+            kaidans = self._hand.find_kaidans()
+            if kaidans.get(self._table_cards.card_num, None):
+                return kaidans[self._table_cards.card_num][-1]
+
+        if self._table_cards.is_pair():
+            pairs = self._hand.find_pairs()
+            if pairs.get(self._table_cards.card_num, None):
+                return pairs[self._table_cards.card_num][-1]
+
+        return []
+        """
+        if self._table_cards.is_kaidan():
+            strategy = SequenceStrategy(self._hand, self._table_effect, self._table_cards)
+        elif self._table_cards.is_pair():
+            strategy = GroupStrategy(self._hand, self._table_effect, self._table_cards)
+        else:
+            print('Strategy not found.')
+            print(self._table_cards)
+            raise
+        cards = strategy.select_cards()
+
+        return cards
+        """
+
+
+class LeadStrategy(BaseStrategy):
+
+    def select_cards(self):
+        kaidans = self._hand.find_kaidans()
+        if len(kaidans) != 0:
+            max_card_num = max(kaidans)
+            return kaidans[max_card_num][0]
+
+        pairs = self._hand.find_pairs()
+        if len(pairs) != 0:
+            max_card_num = max(pairs)
+            return pairs[max_card_num][0]
 
         return []
 
 
 class SequenceStrategy(BaseStrategy):
-    pass
+
+    def select_cards(self):
+        pass
 
 
 class GroupStrategy(BaseStrategy):
-    pass
+
+    def select_cards(self):
+        pass
 
 
 class ReverseStrategy(BaseStrategy):

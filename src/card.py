@@ -63,9 +63,9 @@ class Rank(enum.IntEnum):
 
 
 class Suit(enum.IntEnum):
-    Null = 0
-    S = 1
-    D = 2
-    H = 3
-    C = 4
-    X = 5
+    Null = -1
+    S = 0
+    D = 1
+    H = 2
+    C = 3
+    X = 4

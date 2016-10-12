@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from .card import Card, Joker, Rank, Suit
 
 
 class TableCards(object):
@@ -6,7 +7,7 @@ class TableCards(object):
     場のカード状態を表すクラス
     """
     def __init__(self, cards):
-        self.cards = cards
+        self.cards = self._encode(cards)
 
     def __str__(self):
         s = """
@@ -49,3 +50,40 @@ class TableCards(object):
 
     def _is_same_rank(self):
         return len(set(card.rank for card in self.cards)) == 1
+
+    @classmethod
+    def _decode(self, cards):
+        """
+        Cardオブジェクトのリストを2次元配列に変換する
+        @return:
+        """
+        table = [[0] * 15 for i in range(8)]
+        for card in cards:
+            if card.is_joker():
+                if len(cards) == 1:
+                    table[0][0] = 2
+                else:
+                    table[card.suit.value][card.rank.value] = 2
+            else:
+                table[card.suit.value][card.rank.value] = 1
+        return table
+
+    def _encode(self, data):
+        """
+        2次元配列をCardオブジェクトのリストに変換する
+        @return:
+        """
+        cards = []
+        for suit, line in enumerate(data[:5]):
+            for rank, flag in enumerate(line):
+                if flag == 0:
+                    continue
+                elif flag == 1:
+                    cards.append(Card(Rank(rank), Suit(suit)))
+                elif flag == 2:
+                    cards.append(Joker(Rank(rank), Suit(suit)))
+                else:
+                    print('Flag is not understood.')
+                    raise
+        cards.sort()
+        return cards
