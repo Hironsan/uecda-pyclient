@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 from .card import Card, Joker, Rank, Suit
 
 
@@ -87,3 +88,117 @@ class TableCards(object):
                     raise
         cards.sort()
         return cards
+
+
+class CardSet(object):
+
+    def __init__(self, card_table):
+        self.cards = card_table
+
+    def has_joker(self):
+        return self.cards[4][1] == 2
+
+    def create_kaidan_with_joker(self):
+        tgt_cards = [[0] * 15 for i in range(8)]
+        for i in range(4):
+            count = 1
+            no_j_count = 0
+            for j in reversed(range(14)):
+                if self.cards[i][j] == 1:
+                    count += 1
+                    no_j_count += 1
+                else:
+                    count = no_j_count + 1
+                    no_j_count = 0
+                if count >= 3:
+                    tgt_cards[i][j] = count
+                else:
+                    tgt_cards[i][j] = 0
+        return tgt_cards
+
+    def create_kaidan(self):
+        tgt_cards = [[0] * 15 for i in range(8)]
+        for i in range(4):
+            count = 0
+            for j in reversed(range(15)):
+                if self.cards[i][j] == 1:
+                    count += 1
+                else:
+                    count = 0
+                if count >= 3:
+                    tgt_cards[i][j] = count
+                else:
+                    tgt_cards[i][j] = 0
+        return tgt_cards
+
+    def create_group_with_joker(self):
+        tgt_cards = [[0] * 15 for i in range(8)]
+        for i in range(15):
+            count = self.cards[0][i] + self.cards[1][i] + self.cards[2][i] + self.cards[3][i]
+            for j in range(4):
+                if self.cards[j][i] == 1:
+                    tgt_cards[j][i] = count
+        return tgt_cards
+
+    def create_group(self):
+        tgt_cards = [[0] * 15 for i in range(8)]
+        for i in range(15):
+            count = self.cards[0][i] + self.cards[1][i] + self.cards[2][i] + self.cards[3][i] + 1
+            for j in range(4):
+                if self.cards[j][i] == 1:
+                    tgt_cards[j][i] = count
+        return tgt_cards
+
+    def find_kaidans(self, joker):
+        if joker:
+            kaidans = self.create_group_with_joker()
+        else:
+            kaidans = self.create_kaidan()
+        kaidans_grouped_by_num = defaultdict(list)
+        for i in range(4):
+            for j in range(15):
+                if kaidans[i][j] == 0:
+                    continue
+                cards = []
+                for k in range(kaidans[i][j]):
+                    if j + k >=15:
+                        continue
+                    if self.cards[i][j+k] == 1:
+                        card = Card(Rank(j+k), Suit(i))
+                    elif self.cards[i][j+k] == 0:
+                        card = Joker(Rank(j+k), Suit(i))
+                    cards.append(card)
+                    if len(cards) >= 3:
+                        kaidans_grouped_by_num[len(cards)].append(cards[:])
+
+        return kaidans_grouped_by_num
+
+    def find_groups(self, joker):
+        if joker:
+            groups = self.create_group_with_joker()
+        else:
+            groups = self.create_group()
+        groups_by_num = defaultdict(list)
+        for j in range(15):
+            cards = []
+            for i in range(4):
+                if groups[i][j] == 0:
+                    continue
+                if self.cards[i][j] == 1:
+                    card = Card(Rank(j), Suit(i))
+                elif self.cards[i][j] == 0:
+                    card = Joker(Rank(j), Suit(i))
+                cards.append(card)
+            groups_by_num[len(cards)].append(cards)
+        return groups_by_num
+
+    def get_lower(self, num=2):
+        cards = []
+        count = 0
+        for j in range(15):
+            for i in range(4):
+                if count == num:
+                    return cards
+                if self.cards[i][j] == 1:
+                    count += 1
+                    cards.append(Card(Rank(j), Suit(j)))

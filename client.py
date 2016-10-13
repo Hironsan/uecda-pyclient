@@ -42,7 +42,6 @@ class Client(object):
             while not game.is_over():
                 game = Game()
                 table_cards = TableCards([])
-                # Before a game
                 data = conn.recv_table()                             # 手札を受け取る
                 hand = Hand(data)
                 table_effect = TableEffect(data)
@@ -51,12 +50,10 @@ class Client(object):
                     factory = StrategyFactory(hand, table_effect, table_cards)   # カード選択のための戦略クラスを生成する
                     strategy = factory.create()
                     cards = strategy.select_cards()            # カード交換用のカードを選択する
-                    #data = cards.decode()
-                    data = [[0] * 15 for i in range(8)]
+                    data = TableCards._decode(cards)
                     conn.send_table(data)                            # 選択したカードを提出する
 
                 while game.continues():
-                    # During a game
                     data = conn.recv_table()                         # 手札と場の状態を受け取る
                     hand = Hand(data)
                     table_effect = TableEffect(data)

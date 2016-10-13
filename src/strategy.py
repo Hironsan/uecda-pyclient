@@ -20,12 +20,6 @@ class StrategyFactory(object):
             return LeadStrategy(self._hand, self._table_effect, self._table_cards)
         else:
             return FollowStrategy(self._hand, self._table_effect, self._table_cards)
-        """
-        if self._table_effect.is_forward():
-            return ForwardStrategy(self._hand, self._table_effect, self._table_cards)
-        else:
-            return ReverseStrategy(self._hand, self._table_effect, self._table_cards)
-        """
 
 
 class BaseStrategy(ABC):
@@ -49,7 +43,8 @@ class ExchangeStrategy(BaseStrategy):
     """
 
     def select_cards(self):
-        pass
+        cards = self._hand.get_lower()
+        return cards
 
 
 class ForwardStrategy(BaseStrategy):
@@ -75,12 +70,12 @@ class FollowStrategy(BaseStrategy):
 
     def select_cards(self):
         if self._table_cards.is_kaidan():
-            kaidans = self._hand.find_kaidans()
+            kaidans = self._hand.find_kaidans(joker=self._hand.has_joker())
             if kaidans.get(self._table_cards.card_num(), None):
                 return kaidans[self._table_cards.card_num()][-1]
 
         if self._table_cards.is_pair():
-            pairs = self._hand.find_pairs()
+            pairs = self._hand.find_pairs(joker=self._hand.has_joker())
             if pairs.get(self._table_cards.card_num(), None):
                 return pairs[self._table_cards.card_num()][-1]
 
@@ -90,12 +85,13 @@ class FollowStrategy(BaseStrategy):
 class LeadStrategy(BaseStrategy):
 
     def select_cards(self):
-        kaidans = self._hand.find_kaidans()
+        kaidans = self._hand.find_kaidans(joker=self._hand.has_joker())
+
         if len(kaidans) != 0:
             max_card_num = max(kaidans)
             return kaidans[max_card_num][0]
 
-        pairs = self._hand.find_pairs()
+        pairs = self._hand.find_pairs(joker=self._hand.has_joker())
         if len(pairs) != 0:
             max_card_num = max(pairs)
             return pairs[max_card_num][0]
