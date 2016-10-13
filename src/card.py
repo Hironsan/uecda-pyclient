@@ -22,7 +22,7 @@ class Card(object):
 
     def __str__(self):
         if self.is_joker():
-            return self.suit.name
+            return 'JOKER'#self.suit.name
         return self.suit.name + self.rank.name
 
     def is_joker(self):

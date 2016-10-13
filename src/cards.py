@@ -131,7 +131,7 @@ class CardSet(object):
                     tgt_cards[i][j] = 0
         return tgt_cards
 
-    def create_group_with_joker(self):
+    def create_group(self):
         tgt_cards = [[0] * 15 for i in range(8)]
         for i in range(15):
             count = self.cards[0][i] + self.cards[1][i] + self.cards[2][i] + self.cards[3][i]
@@ -140,7 +140,7 @@ class CardSet(object):
                     tgt_cards[j][i] = count
         return tgt_cards
 
-    def create_group(self):
+    def create_group_with_joker(self):
         tgt_cards = [[0] * 15 for i in range(8)]
         for i in range(15):
             count = self.cards[0][i] + self.cards[1][i] + self.cards[2][i] + self.cards[3][i] + 1
@@ -151,18 +151,16 @@ class CardSet(object):
 
     def find_kaidans(self, joker):
         if joker:
-            kaidans = self.create_group_with_joker()
+            kaidans = self.create_kaidan_with_joker()
         else:
             kaidans = self.create_kaidan()
         kaidans_grouped_by_num = defaultdict(list)
         for i in range(4):
-            for j in range(15):
+            for j in range(13):
                 if kaidans[i][j] == 0:
                     continue
                 cards = []
                 for k in range(kaidans[i][j]):
-                    if j + k >=15:
-                        continue
                     if self.cards[i][j+k] == 1:
                         card = Card(Rank(j+k), Suit(i))
                     elif self.cards[i][j+k] == 0:
@@ -180,16 +178,19 @@ class CardSet(object):
             groups = self.create_group()
         groups_by_num = defaultdict(list)
         for j in range(15):
-            cards = []
             for i in range(4):
                 if groups[i][j] == 0:
                     continue
-                if self.cards[i][j] == 1:
-                    card = Card(Rank(j), Suit(i))
-                elif self.cards[i][j] == 0:
-                    card = Joker(Rank(j), Suit(i))
-                cards.append(card)
-            groups_by_num[len(cards)].append(cards)
+                cards = []
+                for k in range(groups[i][j]):
+                    if i + k >= 5:
+                        continue
+                    if self.cards[i+k][j] == 1:
+                        card = Card(Rank(j), Suit(i+k))
+                    elif self.cards[i+k][j] == 0:
+                        card = Joker(Rank(j), Suit(i+k))
+                    cards.append(card)
+                    groups_by_num[len(cards)].append(cards[:])
         return groups_by_num
 
     def get_lower(self, num=2):

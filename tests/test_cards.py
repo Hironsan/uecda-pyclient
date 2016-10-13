@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-from src.cards import TableCards
+from src.cards import TableCards, CardSet
 from src.card import Card, Joker, Rank, Suit
 
 
@@ -133,3 +133,48 @@ class CardStateTest(unittest.TestCase):
         cards = [card1, card2]
         state = TableCards(cards)
         print(state)
+
+
+import pprint
+class CardSetTest(unittest.TestCase):
+
+    def test_create_kaidan_with_joker(self):
+        cards = [[0] * 15 for i in range(8)]
+        cards[0][1] = 1
+        cards[0][2] = 1
+        cards[4][1] = 2
+        card_set = CardSet(cards)
+        pprint.pprint(card_set.create_kaidan_with_joker())
+
+    def test_create_group_with_joker(self):
+        cards = [[0] * 15 for i in range(8)]
+        cards[0][1] = 1
+        cards[1][1] = 1
+        cards[4][1] = 2
+        card_set = CardSet(cards)
+        pprint.pprint(card_set.create_group_with_joker())
+        pprint.pprint(card_set.create_group())
+
+    def test_find_kaidans(self):
+        cards = [[0] * 15 for i in range(8)]
+        cards[0][1] = 1
+        cards[0][2] = 1
+        cards[4][1] = 2
+        pprint.pprint(cards)
+        card_set = CardSet(cards)
+        pprint.pprint(card_set.create_kaidan_with_joker())
+        for num, kaidans in card_set.find_kaidans(True).items():
+            for kaidan in kaidans:
+                print(' '.join(str(card) for card in kaidan))
+
+    def test_find_groups(self):
+        cards = [[0] * 15 for i in range(8)]
+        cards[0][1] = 1
+        cards[1][1] = 1
+        cards[4][1] = 2
+        pprint.pprint(cards)
+        card_set = CardSet(cards)
+        pprint.pprint(card_set.create_group_with_joker())
+        for num, groups in card_set.find_groups(True).items():
+            for group in groups:
+                print(' '.join(str(card) for card in group))
