@@ -131,22 +131,40 @@ class CardSet(object):
                     tgt_cards[i][j] = 0
         return tgt_cards
 
+    def create_kaidan(self):
+        tgt_cards = [[0] * 15 for i in range(8)]
+        for s in range(4):
+            for r in reversed(Rank):
+                if self.cards[s][r] == 1:
+                    tgt_cards[s][r] = tgt_cards[s][r + 1] + 1
+        return tgt_cards
+
+    def create_kaidan_with_joker(self):
+        tgt_cards = [[0] * 15 for i in range(8)]
+        for s in range(4):
+            for r in reversed(Rank):
+                if self.cards[s][r] == 1:
+                    tgt_cards[s][r] = tgt_cards[s][r + 1] + 1
+                else:
+                    tgt_cards[s][r] = max(tgt_cards[s][r + 1], tgt_cards[s][r + 1] - 1)
+        return tgt_cards
+
     def create_group(self):
         tgt_cards = [[0] * 15 for i in range(8)]
-        for i in range(15):
-            count = self.cards[0][i] + self.cards[1][i] + self.cards[2][i] + self.cards[3][i]
-            for j in range(4):
-                if self.cards[j][i] == 1:
-                    tgt_cards[j][i] = count
+        for r in Rank:
+            count = self.cards[0][r] + self.cards[1][r] + self.cards[2][r] + self.cards[3][r]
+            for s in range(4):
+                if self.cards[s][r] == 1:
+                    tgt_cards[s][r] = count
         return tgt_cards
 
     def create_group_with_joker(self):
         tgt_cards = [[0] * 15 for i in range(8)]
-        for i in range(15):
-            count = self.cards[0][i] + self.cards[1][i] + self.cards[2][i] + self.cards[3][i] + 1
-            for j in range(4):
-                if self.cards[j][i] == 1:
-                    tgt_cards[j][i] = count
+        for r in Rank:
+            count = self.cards[0][r] + self.cards[1][r] + self.cards[2][r] + self.cards[3][r] + 1
+            for s in range(4):
+                if self.cards[s][r] == 1:
+                    tgt_cards[s][r] = count
         return tgt_cards
 
     def find_kaidans(self, joker):
@@ -203,3 +221,53 @@ class CardSet(object):
                 if self.cards[i][j] == 1:
                     count += 1
                     cards.append(Card(Rank(j), Suit(j)))
+
+    def discard_lt(self, rank):
+        """
+        指定値未満のカードを捨てる
+        """
+        pass
+
+    def discard_le(self, rank):
+        """
+        指定値以下のカードを捨てる
+        """
+        for s in range(4):
+            for r in Rank:
+                if r > rank:
+                    return
+                self.cards[s][r] = 0
+
+    def discard_gt(self, rank):
+        """
+        指定値より大きいカードを捨てる
+        """
+        pass
+
+    def discard_ge(self, rank):
+        """
+        指定値以上のカードを捨てる
+        """
+        for s in range(4):
+            for r in reversed(Rank):
+                if r < rank:
+                    return
+                self.cards[s][r] = 0
+
+    def discard_ne(self, rank):
+        """
+        指定値以外ののカードを捨てる
+        """
+        pass
+
+    def discard_eq(self, rank):
+        """
+        指定値のカードを捨てる
+        """
+        pass
+
+    def discard_suit(self, suit):
+        """
+        指定スート以外のカードを捨てる
+        """
+        pass
