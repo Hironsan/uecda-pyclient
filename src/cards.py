@@ -90,7 +90,22 @@ class TableCards(object):
         return cards
 
 
-class CardSet(object):
+class CardSetFactory(object):
+
+    def __init__(self, card_table):
+        self.cards = card_table
+
+    def create(self):
+        if self.has_joker():
+            return JokerCardSet(self.cards)
+        else:
+            return NormalCardSet(self.cards)
+
+    def has_joker(self):
+        return self.cards[4][1] == 2
+
+
+class BaseCardSet(object):
 
     def __init__(self, card_table):
         self.cards = card_table
@@ -98,134 +113,13 @@ class CardSet(object):
     def has_joker(self):
         return self.cards[4][1] == 2
 
-    def create_kaidan_with_joker(self):
-        tgt_cards = [[0] * 15 for i in range(8)]
-        for i in range(4):
-            count = 1
-            no_j_count = 0
-            for j in reversed(range(14)):
-                if self.cards[i][j] == 1:
-                    count += 1
-                    no_j_count += 1
-                else:
-                    count = no_j_count + 1
-                    no_j_count = 0
-                if count >= 3:
-                    tgt_cards[i][j] = count
-                else:
-                    tgt_cards[i][j] = 0
-        return tgt_cards
+    def create_card_table(self):
+        return [[0] * len(Rank) for _ in Suit]
 
     def create_kaidan(self):
-        tgt_cards = [[0] * 15 for i in range(8)]
-        for i in range(4):
-            count = 0
-            for j in reversed(range(15)):
-                if self.cards[i][j] == 1:
-                    count += 1
-                else:
-                    count = 0
-                if count >= 3:
-                    tgt_cards[i][j] = count
-                else:
-                    tgt_cards[i][j] = 0
-        return tgt_cards
+        pass
 
-    def create_kaidan(self):
-        tgt_cards = [[0] * 15 for i in range(8)]
-        for s in range(4):
-            for r in reversed(Rank):
-                if self.cards[s][r] == 1:
-                    tgt_cards[s][r] = tgt_cards[s][r + 1] + 1
-        return tgt_cards
-
-    def create_kaidan_with_joker(self):
-        tgt_cards = [[0] * 15 for i in range(8)]
-        for s in range(4):
-            for r in reversed(Rank):
-                if self.cards[s][r] == 1:
-                    tgt_cards[s][r] = tgt_cards[s][r + 1] + 1
-                else:
-                    tgt_cards[s][r] = max(tgt_cards[s][r + 1], tgt_cards[s][r + 1] - 1)
-        return tgt_cards
-
-    def create_group(self):
-        tgt_cards = [[0] * 15 for i in range(8)]
-        for r in Rank:
-            count = self.cards[0][r] + self.cards[1][r] + self.cards[2][r] + self.cards[3][r]
-            for s in range(4):
-                if self.cards[s][r] == 1:
-                    tgt_cards[s][r] = count
-        return tgt_cards
-
-    def create_group_with_joker(self):
-        tgt_cards = [[0] * 15 for i in range(8)]
-        for r in Rank:
-            count = self.cards[0][r] + self.cards[1][r] + self.cards[2][r] + self.cards[3][r] + 1
-            for s in range(4):
-                if self.cards[s][r] == 1:
-                    tgt_cards[s][r] = count
-        return tgt_cards
-
-    def find_kaidans(self, joker):
-        if joker:
-            kaidans = self.create_kaidan_with_joker()
-        else:
-            kaidans = self.create_kaidan()
-        kaidans_grouped_by_num = defaultdict(list)
-        for i in range(4):
-            for j in range(13):
-                if kaidans[i][j] == 0:
-                    continue
-                cards = []
-                for k in range(kaidans[i][j]):
-                    if self.cards[i][j+k] == 1:
-                        card = Card(Rank(j+k), Suit(i))
-                    elif self.cards[i][j+k] == 0:
-                        card = Joker(Rank(j+k), Suit(i))
-                    cards.append(card)
-                    if len(cards) >= 3:
-                        kaidans_grouped_by_num[len(cards)].append(cards[:])
-
-        return kaidans_grouped_by_num
-
-    def find_groups(self, joker):
-        if joker:
-            groups = self.create_group_with_joker()
-        else:
-            groups = self.create_group()
-        groups_by_num = defaultdict(list)
-        for j in range(15):
-            for i in range(4):
-                if groups[i][j] == 0:
-                    continue
-                cards = []
-                for k in range(groups[i][j]):
-                    if i + k >= 5:
-                        continue
-                    if self.cards[i+k][j] == 1:
-                        card = Card(Rank(j), Suit(i+k))
-                    elif self.cards[i+k][j] == 0:
-                        card = Joker(Rank(j), Suit(i+k))
-                    cards.append(card)
-                    groups_by_num[len(cards)].append(cards[:])
-        return groups_by_num
-
-    def get_lower(self, num=2):
-        cards = []
-        count = 0
-        for j in range(15):
-            for i in range(4):
-                if count == num:
-                    return cards
-                if self.cards[i][j] == 1:
-                    count += 1
-                    cards.append(Card(Rank(j), Suit(j)))
-
-    def discard_lt(self, rank):
-        """
-        指定値未満のカードを捨てる
-        """
+    def create_grouop(self):
         pass
 
     def discard_le(self, rank):
@@ -238,12 +132,6 @@ class CardSet(object):
                     return
                 self.cards[s][r] = 0
 
-    def discard_gt(self, rank):
-        """
-        指定値より大きいカードを捨てる
-        """
-        pass
-
     def discard_ge(self, rank):
         """
         指定値以上のカードを捨てる
@@ -254,20 +142,104 @@ class CardSet(object):
                     return
                 self.cards[s][r] = 0
 
-    def discard_ne(self, rank):
-        """
-        指定値以外ののカードを捨てる
-        """
-        pass
-
-    def discard_eq(self, rank):
-        """
-        指定値のカードを捨てる
-        """
-        pass
-
-    def discard_suit(self, suit):
+    def discard_suit(self, suits):
         """
         指定スート以外のカードを捨てる
         """
-        pass
+        for s in Suit:
+            if s in suits:
+                continue
+            for r in Rank:
+                self.cards[s][r] = 0
+
+    def find_kaidans(self):
+        kaidans = self.create_kaidan()
+        kaidans_grouped_by_num = defaultdict(list)
+        for s in range(4):
+            for r in range(13):
+                cards = []
+                for dr in range(kaidans[s][r]):
+                    if self.cards[s][r+dr] == 1:
+                        card = Card(Rank(r+dr), Suit(s))
+                    elif self.cards[s][r+dr] == 0:
+                        card = Joker(Rank(r+dr), Suit(s))
+                    cards.append(card)
+                    if len(cards) >= 3:
+                        kaidans_grouped_by_num[len(cards)].append(cards[:])
+
+        return kaidans_grouped_by_num
+
+    def find_groups(self):
+        groups = self.create_group()
+        groups_by_num = defaultdict(list)
+        for r in Rank:
+            for s in range(4):
+                cards = []
+                for k in range(groups[s][r]):
+                    if s + k >= 5:
+                        continue
+                    if self.cards[s+k][r] == 1:
+                        card = Card(r, Suit(s+k))
+                    elif self.cards[s+k][r] == 0:
+                        card = Joker(r, Suit(s+k))
+                    cards.append(card)
+                    groups_by_num[len(cards)].append(cards[:])
+        return groups_by_num
+
+    def get_lower(self, num=2):
+        cards = []
+        count = 0
+        for r in Rank:
+            for i in range(4):
+                if count == num:
+                    return cards
+                if self.cards[i][r] == 1:
+                    count += 1
+                    cards.append(Card(r, Suit(i)))
+
+
+class NormalCardSet(BaseCardSet):
+
+    def create_kaidan(self):
+        cards = self.create_card_table()
+        for s in range(4):
+            for r in reversed(Rank):
+                if self.cards[s][r] == 1:
+                    cards[s][r] = cards[s][r + 1] + 1
+        return cards
+
+    def create_group(self):
+        cards = self.create_card_table()
+        for r in Rank:
+            count = sum(self.cards[s][r] for s in range(4))
+            for s in range(4):
+                if self.cards[s][r] == 1:
+                    cards[s][r] = count
+        return cards
+
+
+class JokerCardSet(BaseCardSet):
+
+    def create_kaidan(self):
+        cards = self.create_card_table()
+        for s in range(4):
+            count = 1
+            no_j_count = 0
+            for r in reversed(Rank):
+                if self.cards[s][r] == 1:
+                    count += 1
+                    no_j_count += 1
+                else:
+                    count = no_j_count + 1
+                    no_j_count = 0
+                cards[s][r] = count
+        return cards
+
+    def create_group(self):
+        cards = self.create_card_table()
+        for r in Rank:
+            count = sum(self.cards[s][r] for s in range(4)) + 1
+            for s in range(4):
+                if self.cards[s][r] == 1:
+                    cards[s][r] = count
+        return cards

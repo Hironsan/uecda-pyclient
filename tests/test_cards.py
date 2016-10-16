@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-from src.cards import TableCards, CardSet
+from src.cards import TableCards, BaseCardSet, NormalCardSet, JokerCardSet
 from src.card import Card, Joker, Rank, Suit
 
 
@@ -136,34 +136,70 @@ class CardStateTest(unittest.TestCase):
 
 
 import pprint
-class CardSetTest(unittest.TestCase):
+class NormalCardSetTest(unittest.TestCase):
 
-    def test_create_kaidan_with_joker(self):
-        cards = [[0] * 15 for i in range(8)]
+    def test_create_kaidan(self):
+        cards = [[0] * 15 for _ in range(8)]
         cards[0][1] = 1
         cards[0][2] = 1
+        cards[0][4] = 1
+        card_set = NormalCardSet(cards)
+        kaidans = card_set.create_kaidan()
+        self.assertEqual(kaidans[0][0], 0)
+        self.assertEqual(kaidans[0][1], 2)
+        self.assertEqual(kaidans[0][2], 1)
+        self.assertEqual(kaidans[0][3], 0)
+        self.assertEqual(kaidans[0][4], 1)
+        self.assertEqual(kaidans[0][5], 0)
+
+    def test_create_group(self):
+        cards = [[0] * 15 for _ in range(8)]
+        cards[0][1] = 1
+        cards[1][1] = 1
+        card_set = NormalCardSet(cards)
+        groups = card_set.create_group()
+        self.assertEqual(groups[0][1], 2)
+        self.assertEqual(groups[1][1], 2)
+        self.assertEqual(groups[2][1], 0)
+        self.assertEqual(groups[3][1], 0)
+
+    def test_create_kaidan_with_joker(self):
+        cards = [[0] * 15 for _ in range(8)]
+        cards[0][1] = 1
+        cards[0][2] = 1
+        cards[0][4] = 1
         cards[4][1] = 2
-        card_set = CardSet(cards)
-        pprint.pprint(card_set.create_kaidan_with_joker())
+        card_set = JokerCardSet(cards)
+        kaidans = card_set.create_kaidan()
+        self.assertEqual(kaidans[0][0], 3)
+        self.assertEqual(kaidans[0][1], 4)
+        self.assertEqual(kaidans[0][2], 3)
+        self.assertEqual(kaidans[0][3], 2)
+        self.assertEqual(kaidans[0][4], 2)
+        self.assertEqual(kaidans[0][5], 1)
 
     def test_create_group_with_joker(self):
-        cards = [[0] * 15 for i in range(8)]
+        cards = [[0] * 15 for _ in range(8)]
         cards[0][1] = 1
         cards[1][1] = 1
         cards[4][1] = 2
-        card_set = CardSet(cards)
-        pprint.pprint(card_set.create_group_with_joker())
-        pprint.pprint(card_set.create_group())
+        card_set = JokerCardSet(cards)
+        groups = card_set.create_group()
+        self.assertEqual(groups[0][1], 3)
+        self.assertEqual(groups[1][1], 3)
+        self.assertEqual(groups[2][1], 0)
+        self.assertEqual(groups[3][1], 0)
 
     def test_find_kaidans(self):
         cards = [[0] * 15 for i in range(8)]
         cards[0][1] = 1
         cards[0][2] = 1
+        cards[0][4] = 1
         cards[4][1] = 2
-        pprint.pprint(cards)
-        card_set = CardSet(cards)
-        pprint.pprint(card_set.create_kaidan_with_joker())
-        for num, kaidans in card_set.find_kaidans(True).items():
+        #pprint.pprint(cards)
+        card_set = JokerCardSet(cards)
+        #pprint.pprint(card_set.create_kaidan())
+        for num, kaidans in card_set.find_kaidans().items():
             for kaidan in kaidans:
                 print(' '.join(str(card) for card in kaidan))
 
@@ -172,9 +208,9 @@ class CardSetTest(unittest.TestCase):
         cards[0][1] = 1
         cards[1][1] = 1
         cards[4][1] = 2
-        pprint.pprint(cards)
-        card_set = CardSet(cards)
-        pprint.pprint(card_set.create_group_with_joker())
-        for num, groups in card_set.find_groups(True).items():
+        #pprint.pprint(cards)
+        card_set = NormalCardSet(cards)
+        #pprint.pprint(card_set.create_group())
+        for num, groups in card_set.find_groups().items():
             for group in groups:
                 print(' '.join(str(card) for card in group))

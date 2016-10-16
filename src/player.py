@@ -26,22 +26,6 @@ class Players(object):
         return s
 
 
-"""
-class BasePlayer(object):
-
-    def __init__(self):
-        self._id = None
-        self._class = None
-        self._seat = None
-
-
-class OtherPlayer(BasePlayer):
-
-    def __init__(self):
-        pass
-"""
-
-
 class Player(object):
 
     def __init__(self, data):
