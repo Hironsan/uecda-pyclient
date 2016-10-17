@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from itertools import product, combinations
 from collections import defaultdict
 from .card import Card, Joker, Rank, Suit
 
@@ -126,7 +127,7 @@ class BaseCardSet(object):
         """
         指定値以下のカードを捨てる
         """
-        for s in range(4):
+        for s in Suit:
             for r in Rank:
                 if r > rank:
                     return
@@ -136,7 +137,7 @@ class BaseCardSet(object):
         """
         指定値以上のカードを捨てる
         """
-        for s in range(4):
+        for s in Suit:
             for r in reversed(Rank):
                 if r < rank:
                     return
@@ -154,67 +155,98 @@ class BaseCardSet(object):
 
     def find_kaidans(self):
         kaidans = self.create_kaidan()
-        kaidans_grouped_by_num = defaultdict(list)
-        for s in range(4):
-            for r in range(13):
+        kaidans_by_num = defaultdict(list)
+        for s in Suit:
+            for r in Rank:
                 cards = []
                 for dr in range(kaidans[s][r]):
+                    if r + dr > Rank.Over:
+                        break
                     if self.cards[s][r+dr] == 1:
                         card = Card(Rank(r+dr), Suit(s))
                     elif self.cards[s][r+dr] == 0:
                         card = Joker(Rank(r+dr), Suit(s))
                     cards.append(card)
                     if len(cards) >= 3:
-                        kaidans_grouped_by_num[len(cards)].append(cards[:])
+                        kaidans_by_num[len(cards)].append(cards[:])
 
-        return kaidans_grouped_by_num
+        return kaidans_by_num
 
+    """
     def find_groups(self):
-        groups = self.create_group()
         groups_by_num = defaultdict(list)
         for r in Rank:
-            for s in range(4):
+            for s in Suit:
                 cards = []
-                for k in range(groups[s][r]):
-                    if s + k >= 5:
+                for ds in range(s, len(Suit)):
+                    if self.cards[ds][r] == 0:
                         continue
-                    if self.cards[s+k][r] == 1:
-                        card = Card(r, Suit(s+k))
-                    elif self.cards[s+k][r] == 0:
-                        card = Joker(r, Suit(s+k))
-                    cards.append(card)
+                    cards.append(Card(r, Suit(ds)))
                     groups_by_num[len(cards)].append(cards[:])
+
+        return groups_by_num
+
+    def find_groups(self):
+        groups_by_num = defaultdict(list)
+        for prod in product((0, 1), repeat=len(Suit)):
+            for r in Rank:
+                vec = tuple([self.cards[s][r] for s in Suit])
+                _and = [min(i, j) for i, j in zip(vec, prod)]
+                cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1]
+                if cards and cards not in groups_by_num[len(cards)]:
+                    groups_by_num[len(cards)].append(cards)
+
+        return groups_by_num
+    """
+    def find_groups(self):
+        groups_by_num = defaultdict(list)
+        for prod in product((0, 1), repeat=len(Suit)):
+            for r in Rank:
+                vec = tuple([self.cards[s][r] for s in Suit])
+                _and = [min(i, j) for i, j in zip(vec, prod)]
+                _xor = [0 if i == j else 1 for i, j in zip(_and, prod)]
+                if sum(_xor) == 1:  # Joker使って出せる場合
+                    cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1] + [Joker(r, s) for s, el in zip(Suit, _xor) if el == 1]
+                else:
+                    cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1]
+                if cards and cards not in groups_by_num[len(cards)]:
+                    groups_by_num[len(cards)].append(cards)
+
         return groups_by_num
 
     def get_lower(self, num=2):
         cards = []
         count = 0
         for r in Rank:
-            for i in range(4):
+            for i in Suit:
                 if count == num:
                     return cards
                 if self.cards[i][r] == 1:
                     count += 1
                     cards.append(Card(r, Suit(i)))
 
+        return cards
+
 
 class NormalCardSet(BaseCardSet):
 
     def create_kaidan(self):
         cards = self.create_card_table()
-        for s in range(4):
+        for s in Suit:
             for r in reversed(Rank):
                 if self.cards[s][r] == 1:
                     cards[s][r] = cards[s][r + 1] + 1
+
         return cards
 
     def create_group(self):
         cards = self.create_card_table()
         for r in Rank:
-            count = sum(self.cards[s][r] for s in range(4))
-            for s in range(4):
+            count = sum(self.cards[s][r] for s in Suit)
+            for s in Suit:
                 if self.cards[s][r] == 1:
                     cards[s][r] = count
+
         return cards
 
 
@@ -222,7 +254,7 @@ class JokerCardSet(BaseCardSet):
 
     def create_kaidan(self):
         cards = self.create_card_table()
-        for s in range(4):
+        for s in Suit:
             count = 1
             no_j_count = 0
             for r in reversed(Rank):
@@ -233,13 +265,15 @@ class JokerCardSet(BaseCardSet):
                     count = no_j_count + 1
                     no_j_count = 0
                 cards[s][r] = count
+
         return cards
 
     def create_group(self):
         cards = self.create_card_table()
         for r in Rank:
-            count = sum(self.cards[s][r] for s in range(4)) + 1
-            for s in range(4):
+            count = sum(self.cards[s][r] for s in Suit) + 1
+            for s in Suit:
                 if self.cards[s][r] == 1:
                     cards[s][r] = count
+
         return cards

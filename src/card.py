@@ -22,7 +22,7 @@ class Card(object):
 
     def __str__(self):
         if self.is_joker():
-            return 'JOKER'
+            return 'JOKER({}{})'.format(self.suit.name, self.rank.name)
         return self.suit.name + self.rank.name
 
     def is_joker(self):
@@ -67,4 +67,4 @@ class Suit(enum.IntEnum):
     D = 1
     H = 2
     C = 3
-    X = 4
+    #X = 4

@@ -163,7 +163,34 @@ class NormalCardSetTest(unittest.TestCase):
         self.assertEqual(groups[2][1], 0)
         self.assertEqual(groups[3][1], 0)
 
-    def test_create_kaidan_with_joker(self):
+    def test_find_kaidans(self):
+        cards = [[0] * 15 for _ in range(8)]
+        cards[0][1] = 1
+        cards[0][2] = 1
+        cards[0][4] = 1
+        #pprint.pprint(cards)
+        card_set = NormalCardSet(cards)
+        #pprint.pprint(card_set.create_kaidan())
+        for num, kaidans in card_set.find_kaidans().items():
+            for kaidan in kaidans:
+                print(' '.join(str(card) for card in kaidan))
+
+    def test_find_groups(self):
+        cards = [[0] * 15 for _ in range(8)]
+        cards[0][1] = 1
+        cards[1][1] = 1
+        cards[3][1] = 1
+        #pprint.pprint(cards)
+        card_set = NormalCardSet(cards)
+        #pprint.pprint(card_set.create_group())
+        for num, groups in card_set.find_groups().items():
+            for group in groups:
+                print(' '.join(str(card) for card in group))
+
+
+class JokerCardSetTest(unittest.TestCase):
+
+    def test_create_kaidan(self):
         cards = [[0] * 15 for _ in range(8)]
         cards[0][1] = 1
         cards[0][2] = 1
@@ -178,7 +205,7 @@ class NormalCardSetTest(unittest.TestCase):
         self.assertEqual(kaidans[0][4], 2)
         self.assertEqual(kaidans[0][5], 1)
 
-    def test_create_group_with_joker(self):
+    def test_create_group(self):
         cards = [[0] * 15 for _ in range(8)]
         cards[0][1] = 1
         cards[1][1] = 1
@@ -191,7 +218,7 @@ class NormalCardSetTest(unittest.TestCase):
         self.assertEqual(groups[3][1], 0)
 
     def test_find_kaidans(self):
-        cards = [[0] * 15 for i in range(8)]
+        cards = [[0] * 15 for _ in range(8)]
         cards[0][1] = 1
         cards[0][2] = 1
         cards[0][4] = 1
@@ -209,7 +236,7 @@ class NormalCardSetTest(unittest.TestCase):
         cards[1][1] = 1
         cards[4][1] = 2
         #pprint.pprint(cards)
-        card_set = NormalCardSet(cards)
+        card_set = JokerCardSet(cards)
         #pprint.pprint(card_set.create_group())
         for num, groups in card_set.find_groups().items():
             for group in groups:
