@@ -70,12 +70,12 @@ class FollowStrategy(BaseStrategy):
 
     def select_cards(self):
         if self._table_cards.is_kaidan():
-            kaidans = self._hand.find_kaidans(joker=self._hand.has_joker())
+            kaidans = self._hand.find_kaidans()
             if kaidans.get(self._table_cards.card_num(), None):
                 return kaidans[self._table_cards.card_num()][0]
 
         if self._table_cards.is_pair():
-            pairs = self._hand.find_pairs(joker=self._hand.has_joker())
+            pairs = self._hand.find_groups()
             if pairs.get(self._table_cards.card_num(), None):
                 return pairs[self._table_cards.card_num()][0]
 
@@ -85,13 +85,13 @@ class FollowStrategy(BaseStrategy):
 class LeadStrategy(BaseStrategy):
 
     def select_cards(self):
-        kaidans = self._hand.find_kaidans(joker=self._hand.has_joker())
+        kaidans = self._hand.find_kaidans()
 
         if len(kaidans) != 0:
             max_card_num = min(kaidans)
             return kaidans[max_card_num][0]
 
-        pairs = self._hand.find_pairs(joker=self._hand.has_joker())
+        pairs = self._hand.find_groups()
         if len(pairs) != 0:
             max_card_num = min(pairs)
             return pairs[max_card_num][0]
