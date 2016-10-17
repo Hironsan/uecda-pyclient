@@ -172,48 +172,6 @@ class BaseCardSet(object):
 
         return kaidans_by_num
 
-    """
-    def find_groups(self):
-        groups_by_num = defaultdict(list)
-        for r in Rank:
-            for s in Suit:
-                cards = []
-                for ds in range(s, len(Suit)):
-                    if self.cards[ds][r] == 0:
-                        continue
-                    cards.append(Card(r, Suit(ds)))
-                    groups_by_num[len(cards)].append(cards[:])
-
-        return groups_by_num
-
-    def find_groups(self):
-        groups_by_num = defaultdict(list)
-        for prod in product((0, 1), repeat=len(Suit)):
-            for r in Rank:
-                vec = tuple([self.cards[s][r] for s in Suit])
-                _and = [min(i, j) for i, j in zip(vec, prod)]
-                cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1]
-                if cards and cards not in groups_by_num[len(cards)]:
-                    groups_by_num[len(cards)].append(cards)
-
-        return groups_by_num
-    """
-    def find_groups(self):
-        groups_by_num = defaultdict(list)
-        for prod in product((0, 1), repeat=len(Suit)):
-            for r in Rank:
-                vec = tuple([self.cards[s][r] for s in Suit])
-                _and = [min(i, j) for i, j in zip(vec, prod)]
-                _xor = [0 if i == j else 1 for i, j in zip(_and, prod)]
-                if sum(_xor) == 1:  # Joker使って出せる場合
-                    cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1] + [Joker(r, s) for s, el in zip(Suit, _xor) if el == 1]
-                else:
-                    cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1]
-                if cards and cards not in groups_by_num[len(cards)]:
-                    groups_by_num[len(cards)].append(cards)
-
-        return groups_by_num
-
     def get_lower(self, num=2):
         cards = []
         count = 0
@@ -249,6 +207,18 @@ class NormalCardSet(BaseCardSet):
 
         return cards
 
+    def find_groups(self):
+        groups_by_num = defaultdict(list)
+        for prod in product((0, 1), repeat=len(Suit)):
+            for r in Rank:
+                vec = tuple([self.cards[s][r] for s in Suit])
+                _and = [min(i, j) for i, j in zip(vec, prod)]
+                cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1]
+                if cards and cards not in groups_by_num[len(cards)]:
+                    groups_by_num[len(cards)].append(cards)
+
+        return groups_by_num
+
 
 class JokerCardSet(BaseCardSet):
 
@@ -277,3 +247,22 @@ class JokerCardSet(BaseCardSet):
                     cards[s][r] = count
 
         return cards
+
+    def find_groups(self):
+        groups_by_num = defaultdict(list)
+        for prod in product((0, 1), repeat=len(Suit)):
+            for r in Rank:
+                vec = tuple([self.cards[s][r] for s in Suit])
+                _and = [min(i, j) for i, j in zip(vec, prod)]
+                _xor = [0 if i == j else 1 for i, j in zip(_and, prod)]
+                if sum(_xor) == 1:  # Joker使って出せる場合
+                    cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1] + [Joker(r, s) for s, el in zip(Suit, _xor) if el == 1]
+                else:
+                    cards = [Card(r, s) for s, el in zip(Suit, _and) if el == 1]
+                if cards and cards not in groups_by_num[len(cards)]:
+                    groups_by_num[len(cards)].append(cards)
+        cards = [card for card in groups_by_num[1] if not card[0].is_joker()]
+        cards.append([Joker(Rank(0), Suit(0))])
+        groups_by_num[1] = cards
+
+        return groups_by_num

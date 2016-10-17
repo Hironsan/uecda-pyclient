@@ -168,9 +168,7 @@ class NormalCardSetTest(unittest.TestCase):
         cards[0][1] = 1
         cards[0][2] = 1
         cards[0][4] = 1
-        #pprint.pprint(cards)
         card_set = NormalCardSet(cards)
-        #pprint.pprint(card_set.create_kaidan())
         for num, kaidans in card_set.find_kaidans().items():
             for kaidan in kaidans:
                 print(' '.join(str(card) for card in kaidan))
@@ -180,9 +178,7 @@ class NormalCardSetTest(unittest.TestCase):
         cards[0][1] = 1
         cards[1][1] = 1
         cards[3][1] = 1
-        #pprint.pprint(cards)
         card_set = NormalCardSet(cards)
-        #pprint.pprint(card_set.create_group())
         for num, groups in card_set.find_groups().items():
             for group in groups:
                 print(' '.join(str(card) for card in group))
@@ -223,9 +219,7 @@ class JokerCardSetTest(unittest.TestCase):
         cards[0][2] = 1
         cards[0][4] = 1
         cards[4][1] = 2
-        #pprint.pprint(cards)
         card_set = JokerCardSet(cards)
-        #pprint.pprint(card_set.create_kaidan())
         for num, kaidans in card_set.find_kaidans().items():
             for kaidan in kaidans:
                 print(' '.join(str(card) for card in kaidan))
@@ -234,10 +228,9 @@ class JokerCardSetTest(unittest.TestCase):
         cards = [[0] * 15 for i in range(8)]
         cards[0][1] = 1
         cards[1][1] = 1
+        cards[3][1] = 1
         cards[4][1] = 2
-        #pprint.pprint(cards)
         card_set = JokerCardSet(cards)
-        #pprint.pprint(card_set.create_group())
         for num, groups in card_set.find_groups().items():
             for group in groups:
                 print(' '.join(str(card) for card in group))
