@@ -36,6 +36,25 @@ class BaseStrategy(ABC):
     def select_cards(self):
         pass
 
+    def discard_le(self, melds, rank):
+        """
+        指定値以下のカードを捨てる
+        """
+        melds = [meld for meld in melds if meld[0].rank > rank]
+        return melds
+
+    def discard_ge(self, rank):
+        """
+        指定値以上のカードを捨てる
+        """
+        pass
+
+    def discard_suit(self, suits):
+        """
+        指定スート以外のカードを捨てる
+        """
+        pass
+
 
 class ExchangeStrategy(BaseStrategy):
     """
@@ -47,37 +66,22 @@ class ExchangeStrategy(BaseStrategy):
         return cards
 
 
-class ForwardStrategy(BaseStrategy):
-    """
-    カードの強さが逆転していない時の戦略を実装するクラス
-    """
-
-    def select_cards(self):
-        if self._table_cards.is_kaidan():
-            kaidans = self._hand.find_kaidans()
-            if kaidans.get(self._table_cards.card_num, None):
-                return kaidans[self._table_cards.card_num][-1]
-
-        if self._table_cards.is_pair():
-            pairs = self._hand.find_pairs()
-            if pairs.get(self._table_cards.card_num, None):
-                return pairs[self._table_cards.card_num][-1]
-
-        return []
-
-
 class FollowStrategy(BaseStrategy):
 
     def select_cards(self):
         if self._table_cards.is_kaidan():
             kaidans = self._hand.find_kaidans()
             if kaidans.get(self._table_cards.card_num(), None):
-                return kaidans[self._table_cards.card_num()][0]
+                kaidans = self.discard_le(kaidans[self._table_cards.card_num()], self._table_cards.max_card().rank)
+                return kaidans[0] if kaidans else []
 
         if self._table_cards.is_pair():
             pairs = self._hand.find_groups()
             if pairs.get(self._table_cards.card_num(), None):
-                return pairs[self._table_cards.card_num()][0]
+                pairs = self.discard_le(pairs[self._table_cards.card_num()], self._table_cards.max_card().rank)
+                for cards in pairs:
+                    print(' '.join(str(card) for card in cards))
+                return pairs[0] if pairs else []
 
         return []
 
@@ -118,3 +122,22 @@ class ReverseStrategy(BaseStrategy):
 
     def select_cards(self):
         pass
+
+
+class ForwardStrategy(BaseStrategy):
+    """
+    カードの強さが逆転していない時の戦略を実装するクラス
+    """
+
+    def select_cards(self):
+        if self._table_cards.is_kaidan():
+            kaidans = self._hand.find_kaidans()
+            if kaidans.get(self._table_cards.card_num, None):
+                return kaidans[self._table_cards.card_num][-1]
+
+        if self._table_cards.is_pair():
+            pairs = self._hand.find_pairs()
+            if pairs.get(self._table_cards.card_num, None):
+                return pairs[self._table_cards.card_num][-1]
+
+        return []
