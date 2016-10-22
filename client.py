@@ -57,16 +57,22 @@ class Client(object):
                     data = conn.recv_table()                         # 手札と場の状態を受け取る
                     hand = Hand(data)
                     table_effect = TableEffect(data)
+                    if data[5][4]:
+                        table_cards = TableCards([])
                     player = Player(data)
                     if player.can_submit():                              # 自分の番だったら
                         factory = StrategyFactory(hand, table_effect, table_cards)   # カード選択のための戦略クラスを生成する
                         strategy = factory.create()
                         cards = strategy.select_cards()               # カードを選択する
-                        print(table_cards)
-                        print(' '.join(str(card) for card in cards))
+                        #print(table_cards)
+                        #print(table_effect)
+                        #print('submit cards: ' + ' '.join(str(card) for card in cards))
                         data = TableCards._decode(cards)
+                        #import pprint
+                        #pprint.pprint(data)
                         conn.send_table(data)                        # 選択したカードを提出する
                         was_accepted = conn.recv_int()                # 受理されたかを受け取る
+                        #print("accept" if was_accepted == 9 else "reject")
 
                     data = conn.recv_table()                         # 場のカードを受け取る
                     table_cards = TableCards(data)               # 場のカード状態を決定する
