@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from itertools import product, combinations
+from operator import attrgetter
 from collections import defaultdict
 from .card import Card, Joker, Rank, Suit
 
@@ -31,6 +32,8 @@ class TableCards(object):
         return self.cards[0] if len(self.cards) > 0 else []
 
     def max_card(self):
+        #cards = sorted(self.cards, key=attrgetter('rank'))
+        #return cards[-1] if len(cards) > 0 else []
         return self.cards[-1] if len(self.cards) > 0 else []
 
     def suits(self):

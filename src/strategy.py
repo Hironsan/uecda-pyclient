@@ -49,11 +49,12 @@ class BaseStrategy(ABC):
         """
         pass
 
-    def discard_suit(self, suits):
+    def discard_suit(self, melds, suits):
         """
         指定スート以外のカードを捨てる
         """
-        pass
+        melds = [meld for meld in melds if meld.suits > suits]
+        return melds
 
 
 class ExchangeStrategy(BaseStrategy):
@@ -79,8 +80,6 @@ class FollowStrategy(BaseStrategy):
             pairs = self._hand.find_groups()
             if pairs.get(self._table_cards.card_num(), None):
                 pairs = self.discard_le(pairs[self._table_cards.card_num()], self._table_cards.max_card().rank)
-                #for cards in pairs:
-                 #   print(' '.join(str(card) for card in cards))
                 return pairs[0] if pairs else []
 
         return []
@@ -92,15 +91,11 @@ class LeadStrategy(BaseStrategy):
         kaidans = self._hand.find_kaidans()
 
         if len(kaidans) != 0:
-            #print('Lead kaidans:')
-            #print(kaidans)
             max_card_num = max(kaidans)
             return kaidans[max_card_num][0]
 
         pairs = self._hand.find_groups()
         if len(pairs) != 0:
-            #print('Lead pairs:')
-            #print(pairs)
             max_card_num = max(pairs)
             return pairs[max_card_num][0]
 
