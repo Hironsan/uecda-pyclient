@@ -62,8 +62,14 @@ class ExchangeStrategy(BaseStrategy):
     カードの交換戦略を実装するクラス
     """
 
+    def __init__(self, hand, table_effect, table_cards, player):
+        self._hand = hand
+        self._table_effect = table_effect
+        self._table_cards = table_cards
+        self._player = player
+
     def select_cards(self):
-        cards = self._hand.get_lower()
+        cards = self._hand.get_lower(self._player._exchange_num)
         return cards
 
 

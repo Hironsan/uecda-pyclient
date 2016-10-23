@@ -3,7 +3,7 @@ import enum
 from src.connection import Connection
 from src.option_parser import OptParser
 from src.cards import TableCards
-from src.strategy import StrategyFactory
+from src.strategy import StrategyFactory, ExchangeStrategy
 from src.hand import Hand
 from src.table import TableEffect
 from src.player import Players, Player
@@ -47,8 +47,9 @@ class Client(object):
                 table_effect = TableEffect(data)
                 player = Player(data)
                 if player.needs_exchange():      # カード交換をする場合は
-                    factory = StrategyFactory(hand, table_effect, table_cards)   # カード選択のための戦略クラスを生成する
-                    strategy = factory.create()
+                    #factory = StrategyFactory(hand, table_effect, table_cards, player)   # カード選択のための戦略クラスを生成する
+                    strategy = ExchangeStrategy(hand, table_effect, table_cards, player)
+                    #strategy = factory.create()
                     cards = strategy.select_cards()            # カード交換用のカードを選択する
                     data = TableCards._decode(cards)
                     conn.send_table(data)                            # 選択したカードを提出する
